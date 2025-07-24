@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/screens/register.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,19 +25,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void createUserWithEmailAndPassword() async {
     try {
-      final credential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-            email: _emailController.text,
-            password: _passwordController.text,
-          );
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('No user found for that email.')),
+        );
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Wrong password provided for that user.')),
+        );
       }
-    } catch (e) {
-      print(e);
     }
   }
 
@@ -89,6 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   return null;
                 },
               ),
+              Row(children: [Text('Dont have an account'), TextButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen(),));
+              }, child: Text('Register'))],),
               ElevatedButton(
                 onPressed: createUserWithEmailAndPassword,
                 child: Text("Login"),

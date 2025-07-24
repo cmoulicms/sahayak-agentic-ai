@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:myapp/features/local_content/local_content_view_model.dart';
 import 'package:myapp/screens/home_screen.dart';
-import 'package:myapp/screens/login_in.dart';
+import 'package:myapp/screens/profile.dart';
+import 'package:myapp/screens/register.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
@@ -56,11 +58,34 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const AuthGate(),
+    );
+  }
+}
+
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        } else if (snapshot.hasData && snapshot.data != null) {
+          return const MyHomePage(title: 'Sahayak AI');
+        } else {
+          return const RegisterScreen();
+        }
+      },
     );
   }
 }
@@ -89,9 +114,9 @@ class _MyHomePageState extends State<MyHomePage> {
   );
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-
-    // ProfileScreen()
-    LoginScreen(),
+    Text('Resources'),
+    Text('Commnunity'),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -111,8 +136,10 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.book_rounded), label: 'Resources'),
+          BottomNavigationBarItem(icon: Icon(Icons.group_rounded), label: 'Community'),
+          BottomNavigationBarItem(icon: Icon(Icons.people_rounded), label: 'Profile'),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],
