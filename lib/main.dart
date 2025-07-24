@@ -2,16 +2,54 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ai/firebase_ai.dart';
+import 'package:myapp/features/local_content/local_content_view_model.dart';
 import 'package:myapp/screens/home_screen.dart';
 import 'package:myapp/screens/profile.dart';
 import 'package:myapp/screens/register.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
+
+  late GenerativeModel geminiVisionProModel;
+  late GenerativeModel geminiProModel;
+  geminiVisionProModel = FirebaseAI.googleAI().generativeModel(
+    model: 'gemini-pro-vision',
+    generationConfig: GenerationConfig(
+      temperature: 0.4,
+      topK: 32,
+      topP: 1,
+      maxOutputTokens: 4096,
+    ),
+  );
+
+  geminiProModel = FirebaseAI.googleAI().generativeModel(
+    model: 'gemini-2.5-flash',
+    generationConfig: GenerationConfig(
+      temperature: 0.4,
+      topK: 32,
+      topP: 1,
+      maxOutputTokens: 4096,
+    ),
+  );
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => LocalContentViewModel(
+            multiModalModel: geminiVisionProModel,
+            textModel: geminiProModel,
+          ),
+        ),
+        // other providers here
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -62,9 +100,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final model = FirebaseAI.googleAI().generativeModel(
-    model: 'gemini-2.5-flash',
-  );
+  late GenerativeModel geminiVisionProModel;
+  late GenerativeModel geminiProModel;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   int _selectedIndex = 0;
   static const TextStyle optionStyle = TextStyle(
     fontSize: 30,
@@ -72,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
   );
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    Text('Rsourcesk'),
+    Text('Resources'),
     Text('Commnunity'),
     ProfileScreen(),
   ];
@@ -83,12 +125,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _incrementCounter() async {
+  void _incrementCounter(int index) async {
     setState(() {});
-    final prompt = [Content.text('Write a story about a magic backpack.')];
-
-    final response = await model.generateContent(prompt);
-    print(response.text);
   }
 
   @override
@@ -105,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+        onTap: _incrementCounter,
       ),
     );
   }
