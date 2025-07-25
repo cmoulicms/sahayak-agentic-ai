@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:image_picker/image_picker.dart';
 import 'package:myapp/features/generated_content/generated_content_model.dart';
 import 'package:myapp/features/prompt/prompt_model.dart';
 import 'package:myapp/services/filestore.dart';

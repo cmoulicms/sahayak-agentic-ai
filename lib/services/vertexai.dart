@@ -22,7 +22,6 @@ class GeminiService {
     final additionalTextParts = prompt.additionalTextInputs!.map(
       (t) => TextPart(t),
     );
-    ;
 
     // if (prompt.images != null) {
     //   final bytes = await (prompt.images?[0]!.readAsBytes());

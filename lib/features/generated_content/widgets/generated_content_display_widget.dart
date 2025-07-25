@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:myapp/features/generated_content/generated_content_model.dart';
 
 import '../../../theme.dart';

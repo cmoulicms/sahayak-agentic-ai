@@ -19,10 +19,10 @@ class LocalContentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<LocalContentViewModel>();
-    final TextEditingController _promptController = TextEditingController();
-    final TextEditingController _languageController = TextEditingController();
-    final TextEditingController _standardsController = TextEditingController();
-    bool _isLoading = false;
+    final TextEditingController promptController = TextEditingController();
+    final TextEditingController languageController = TextEditingController();
+    final TextEditingController standardsController = TextEditingController();
+    bool isLoading = false;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -33,7 +33,7 @@ class LocalContentScreen extends StatelessWidget {
             child: Column(
               children: [
                 TextField(
-                  controller: _promptController,
+                  controller: promptController,
                   decoration: const InputDecoration(
                     labelText: 'Enter your prompt',
                     border: OutlineInputBorder(),
@@ -41,7 +41,7 @@ class LocalContentScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 TextField(
-                  controller: _languageController,
+                  controller: languageController,
                   decoration: const InputDecoration(
                     labelText: 'Language',
                     border: OutlineInputBorder(),
@@ -49,7 +49,7 @@ class LocalContentScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 TextField(
-                  controller: _standardsController,
+                  controller: standardsController,
                   decoration: const InputDecoration(
                     labelText: 'Standards (comma-separated)',
                     border: OutlineInputBorder(),
@@ -60,9 +60,9 @@ class LocalContentScreen extends StatelessWidget {
                   onPressed: () async {
                     await viewModel
                         .submitPrompt(
-                          _promptController.text,
-                          _languageController.text,
-                          _standardsController.text,
+                          promptController.text,
+                          languageController.text,
+                          standardsController.text,
                         )
                         .then((_) async {
                           if (!context.mounted) return;
@@ -91,7 +91,7 @@ class LocalContentScreen extends StatelessWidget {
                           }
                         });
                   },
-                  child: _isLoading
+                  child: isLoading
                       ? const CircularProgressIndicator()
                       : const Text('Generate'),
                 ),
@@ -99,8 +99,6 @@ class LocalContentScreen extends StatelessWidget {
             ),
           ),
         );
-        ;
-        ;
       },
     );
   }

@@ -63,8 +63,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) return 'Enter email';
-                  if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value))
+                  if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
                     return 'Enter valid email';
+                  }
                   return null;
                 },
               ),

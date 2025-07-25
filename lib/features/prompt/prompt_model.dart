@@ -1,4 +1,3 @@
-import 'package:image_picker/image_picker.dart';
 import '../../util/filter_enums.dart';
 
 class PromptData {
