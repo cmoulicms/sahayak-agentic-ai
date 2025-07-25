@@ -35,7 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
   }
 
-  void signInWithEmailAndPassword() async {
+  void createUserWithEmailAndPassword() async {
     try {
       final UserCredential credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -156,7 +156,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ],
                 ),
                 ElevatedButton(
-                  onPressed: signInWithEmailAndPassword,
+                  onPressed: createUserWithEmailAndPassword,
                   child: Text("Register"),
                 ),
               ],
