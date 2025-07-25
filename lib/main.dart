@@ -1,91 +1,67 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_ai/firebase_ai.dart';
-import 'package:myapp/features/local_content/local_content_view_model.dart';
-import 'package:myapp/screens/home_screen.dart';
-import 'package:myapp/screens/profile.dart';
-import 'package:myapp/screens/register.dart';
+import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:myapp/presentation/providers/ai_assistant_provider.dart';
+import 'package:myapp/presentation/providers/auth_provider.dart';
+import 'package:myapp/presentation/providers/lesson_provider.dart';
+import 'package:myapp/presentation/providers/morningPrep_provider.dart';
+import 'package:myapp/presentation/providers/theme_provider.dart';
+import 'package:myapp/presentation/screens/auth/auth_wrapper.dart';
+import 'package:myapp/presentation/screens/auth/login_screen.dart';
+import 'package:myapp/presentation/screens/home/dashboard_screen.dart';
+import 'package:myapp/presentation/screens/onboarding/onboarding_screen.dart';
 import 'package:provider/provider.dart';
-import 'firebase_options.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await Hive.initFlutter();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const SahayakApp());
+}
 
-  late GenerativeModel geminiVisionProModel;
-  late GenerativeModel geminiProModel;
-  geminiVisionProModel = FirebaseAI.googleAI().generativeModel(
-    model: 'gemini-pro-vision',
-    generationConfig: GenerationConfig(
-      temperature: 0.4,
-      topK: 32,
-      topP: 1,
-      maxOutputTokens: 4096,
-    ),
-  );
+class SahayakApp extends StatelessWidget {
+  const SahayakApp({super.key});
 
-  geminiProModel = FirebaseAI.googleAI().generativeModel(
-    model: 'gemini-2.5-flash',
-    generationConfig: GenerationConfig(
-      temperature: 0.4,
-      topK: 32,
-      topP: 1,
-      maxOutputTokens: 4096,
-    ),
-  );
-
-  runApp(
-    MultiProvider(
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => LocalContentViewModel(
-            multiModalModel: geminiVisionProModel,
-            textModel: geminiProModel,
-          ),
-        ),
-        // other providers here
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => AIAssistantProvider()),
+        // ChangeNotifierProvider(create: (_) => TeacherProvider()),
+        ChangeNotifierProvider(create: (_) => LessonProvider()),
+        ChangeNotifierProvider(create: (_) => MorningPrepProvider()),
       ],
-      child: MyApp(),
-    ),
-  );
-}
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          // Show loading screen while theme is initializing
+          if (!themeProvider.isInitialized) {
+            return MaterialApp(
+              home: const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              ),
+              theme: AppThemes.lightTheme,
+            );
+          }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const AuthGate(),
-    );
-  }
-}
-
-class AuthGate extends StatelessWidget {
-  const AuthGate({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+          return MaterialApp(
+            title: 'Sahayak AI',
+            theme: AppThemes.lightTheme,
+            darkTheme: AppThemes.darkTheme,
+            themeMode: themeProvider.themeMode,
+            // Use AuthWrapper as home instead of specific screens
+            home: const AuthWrapper(),
+            routes: {
+              '/login': (context) => const LoginScreen(),
+              '/onboarding': (context) => const OnboardingScreen(),
+              '/dashboard': (context) => const DashboardScreen(),
+            },
           );
-        } else if (snapshot.hasData && snapshot.data != null) {
-          return const MyHomePage(title: 'Sahayak AI');
-        } else {
-          return const RegisterScreen();
-        }
-      },
+        },
+      ),
     );
   }
 }
@@ -100,51 +76,40 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late GenerativeModel geminiVisionProModel;
-  late GenerativeModel geminiProModel;
-  @override
-  void initState() {
-    super.initState();
-  }
+  int _counter = 0;
 
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle = TextStyle(
-    fontSize: 30,
-    fontWeight: FontWeight.bold,
-  );
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
-    Text('Resources'),
-    Text('Commnunity'),
-    ProfileScreen(),
-  ];
-
-  void _onItemTapped(int index) {
+  void _incrementCounter() {
     setState(() {
-      _selectedIndex = index;
+      _counter++;
     });
-  }
-
-  void _incrementCounter(int index) async {
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Sahayak AI')),
-      body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.book_rounded), label: 'Resources'),
-          BottomNavigationBarItem(icon: Icon(Icons.group_rounded), label: 'Community'),
-          BottomNavigationBarItem(icon: Icon(Icons.people_rounded), label: 'Profile'),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _incrementCounter,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
       ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

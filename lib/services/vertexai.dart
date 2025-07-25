@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'package:firebase_ai/firebase_ai.dart';
 import '../features/prompt/prompt_model.dart';
-import 'package:image_picker/image_picker.dart';
 
 class GeminiService {
   /*
