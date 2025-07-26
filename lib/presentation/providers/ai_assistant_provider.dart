@@ -331,35 +331,35 @@ class AIAssistantProvider extends ChangeNotifier {
   }
 
   // Assess reading with enhanced recording
-  Future<void> assessReading({
-    required Uint8List audioBytes,
-    required String expectedText,
-    String? language,
-  }) async {
-    _setLoading(true);
-    try {
-      _lastReadingAssessment = await _aiService.assessReading(
-        audioBytes: audioBytes,
-        expectedText: expectedText,
-        language: language,
-      );
+  // Future<void> assessReading({
+  //   required Uint8List audioBytes,
+  //   required String expectedText,
+  //   String? language,
+  // }) async {
+  //   _setLoading(true);
+  //   try {
+  //     _lastReadingAssessment = await _aiService.assessReading(
+  //       audioBytes: audioBytes,
+  //       expectedText: expectedText,
+  //       language: language,
+  //     );
 
-      _addToHistory(HistoryItem(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        type: HistoryItemType.readingAssessment,
-        title: 'Reading Assessment',
-        description: 'Assessment for reading accuracy',
-        timestamp: DateTime.now(),
-        data: _lastReadingAssessment!.toMap(),
-      ));
+  //     _addToHistory(HistoryItem(
+  //       id: DateTime.now().millisecondsSinceEpoch.toString(),
+  //       type: HistoryItemType.readingAssessment,
+  //       title: 'Reading Assessment',
+  //       description: 'Assessment for reading accuracy',
+  //       timestamp: DateTime.now(),
+  //       data: _lastReadingAssessment!.toMap(),
+  //     ));
 
-      _clearError();
-    } catch (e) {
-      _setError('Failed to assess reading: $e');
-    } finally {
-      _setLoading(false);
-    }
-  }
+  //     _clearError();
+  //   } catch (e) {
+  //     _setError('Failed to assess reading: $e');
+  //   } finally {
+  //     _setLoading(false);
+  //   }
+  // }
 
   // Audio recording methods
   Future<void> startRecording() async {
