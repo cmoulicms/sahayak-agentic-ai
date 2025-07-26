@@ -1,6 +1,6 @@
 
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
+// import 'package:speech_to_text/speech_to_text.dart' as stt;
 // import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SpeechService {
@@ -9,7 +9,7 @@ class SpeechService {
   SpeechService._internal();
 
   final FlutterTts _flutterTts = FlutterTts();
-  final stt.SpeechToText _speechToText = stt.SpeechToText();
+  // final stt.SpeechToText _speechToText = stt.SpeechToText();
 
   bool _isInitialized = false;
   bool _isSpeaking = false;
@@ -119,77 +119,77 @@ class SpeechService {
   }
 
   // // Speech-to-Text methods
-  Future<bool> startListening({
-    String? localeId,
-    Function(String)? onResult,
-    Function(String)? onError,
-  }) async {
-    if (!_isInitialized) {
-      await initialize();
-    }
+  // Future<bool> startListening({
+  //   String? localeId,
+  //   Function(String)? onResult,
+  //   Function(String)? onError,
+  // }) async {
+  //   if (!_isInitialized) {
+  //     await initialize();
+  //   }
 
-    if (!_isInitialized) return false;
+  //   if (!_isInitialized) return false;
 
-    try {
-      _isListening = await _speechToText.listen(
-        onResult: (result) {
-          if (onResult != null) {
-            onResult(result.recognizedWords);
-          }
-        },
-        localeId: localeId ?? 'en_US',
-        listenFor: const Duration(seconds: 30),
-        pauseFor: const Duration(seconds: 3),
-        cancelOnError: true,
-        partialResults: true,
-      );
+  //   try {
+  //     _isListening = await _speechToText.listen(
+  //       onResult: (result) {
+  //         if (onResult != null) {
+  //           onResult(result.recognizedWords);
+  //         }
+  //       },
+  //       localeId: localeId ?? 'en_US',
+  //       listenFor: const Duration(seconds: 30),
+  //       pauseFor: const Duration(seconds: 3),
+  //       cancelOnError: true,
+  //       partialResults: true,
+  //     );
 
-      return _isListening;
-    } catch (e) {
-      print('Error starting speech recognition: $e');
-      if (onError != null) {
-        onError(e.toString());
-      }
-      return false;
-    }
-  }
+  //     return _isListening;
+  //   } catch (e) {
+  //     print('Error starting speech recognition: $e');
+  //     if (onError != null) {
+  //       onError(e.toString());
+  //     }
+  //     return false;
+  //   }
+  // }
 
-  Future<void> stopListening() async {
-    try {
-      await _speechToText.stop();
-      _isListening = false;
-    } catch (e) {
-      print('Error stopping speech recognition: $e');
-    }
-  }
+  // Future<void> stopListening() async {
+  //   try {
+  //     await _speechToText.stop();
+  //     _isListening = false;
+  //   } catch (e) {
+  //     print('Error stopping speech recognition: $e');
+  //   }
+  // }
 
-  Future<void> cancelListening() async {
-    try {
-      await _speechToText.cancel();
-      _isListening = false;
-    } catch (e) {
-      print('Error canceling speech recognition: $e');
-    }
-  }
+  // Future<void> cancelListening() async {
+  //   try {
+  //     await _speechToText.cancel();
+  //     _isListening = false;
+  //   } catch (e) {
+  //     print('Error canceling speech recognition: $e');
+  //   }
+  // }
 
   // Get available speech recognition locales
-  Future<List<stt.LocaleName>> getAvailableLocales() async {
-    if (!_isInitialized) {
-      await initialize();
-    }
+  // Future<List<stt.LocaleName>> getAvailableLocales() async {
+  //   if (!_isInitialized) {
+  //     await initialize();
+  //   }
 
-    try {
-      return await _speechToText.locales();
-    } catch (e) {
-      print('Error getting available locales: $e');
-      return [];
-    }
-  }
+  //   try {
+  //     return await _speechToText.locales();
+  //   } catch (e) {
+  //     print('Error getting available locales: $e');
+  //     return [];
+  //   }
+  // }
 
   // Clean up resources
-  Future<void> dispose() async {
-    await stop();
-    await stopListening();
-    _isInitialized = false;
-  }
+  // Future<void> dispose() async {
+  //   await stop();
+  //   await stopListening();
+  //   _isInitialized = false;
+  // }
 }
