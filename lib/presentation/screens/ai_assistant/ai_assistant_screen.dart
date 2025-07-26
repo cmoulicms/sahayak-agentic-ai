@@ -81,15 +81,17 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           isScrollable: true,
           tabs: const [
             Tab(
-                text: 'Ask AI',
-                icon: Icon(Icons.chat_bubble_outline, size: 20)),
+              text: 'Ask AI',
+              icon: Icon(Icons.chat_bubble_outline, size: 20),
+            ),
             Tab(text: 'Local Content', icon: Icon(Icons.language, size: 20)),
             Tab(text: 'Materials', icon: Icon(Icons.layers, size: 20)),
             Tab(text: 'Visual Aids', icon: Icon(Icons.draw, size: 20)),
             Tab(text: 'Games', icon: Icon(Icons.games, size: 20)),
             Tab(
-                text: 'Reading Test',
-                icon: Icon(Icons.record_voice_over, size: 20)),
+              text: 'Reading Test',
+              icon: Icon(Icons.record_voice_over, size: 20),
+            ),
           ],
         ),
         actions: [
@@ -102,9 +104,13 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
             onSelected: (value) => _handleMenuAction(value),
             itemBuilder: (context) => const [
               PopupMenuItem(
-                  value: 'clear_history', child: Text('Clear History')),
+                value: 'clear_history',
+                child: Text('Clear History'),
+              ),
               PopupMenuItem(
-                  value: 'export_content', child: Text('Export Content')),
+                value: 'export_content',
+                child: Text('Export Content'),
+              ),
               PopupMenuItem(value: 'settings', child: Text('AI Settings')),
             ],
           ),
@@ -426,18 +432,16 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           Text(
             'Ask me anything!',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                ),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             'I can explain concepts, answer questions,\nand provide teaching suggestions',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                ),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            ),
           ),
           const SizedBox(height: 24),
           Wrap(
@@ -462,8 +466,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
         _chatController.text = question;
         _sendMessage();
       },
-      backgroundColor:
-          Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.primaryContainer.withOpacity(0.5),
     );
   }
 
@@ -492,13 +497,14 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 color: message.isUser
                     ? Theme.of(context).colorScheme.primaryContainer
                     : message.isError
-                        ? Theme.of(context).colorScheme.errorContainer
-                        : Theme.of(context).colorScheme.surfaceContainerHighest,
+                    ? Theme.of(context).colorScheme.errorContainer
+                    : Theme.of(context).colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+<<<<<<< Updated upstream
                   Row(
                     children: [
                       Expanded(
@@ -525,6 +531,15 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                         ),
                       ],
                     ],
+=======
+                  Text(
+                    message.content,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: message.isError
+                          ? Theme.of(context).colorScheme.onErrorContainer
+                          : null,
+                    ),
+>>>>>>> Stashed changes
                   ),
                   if (message.knowledgeResponse != null) ...[
                     const SizedBox(height: 12),
@@ -596,10 +611,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .colorScheme
-                  .primaryContainer
-                  .withOpacity(0.3),
+              color: Theme.of(
+                context,
+              ).colorScheme.primaryContainer.withOpacity(0.3),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -616,6 +630,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                     Text(
                       'Think of it this way:',
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
+<<<<<<< Updated upstream
                             fontWeight: FontWeight.w600,
                           ),
                     ),
@@ -626,6 +641,10 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                         _showSnackBar(
                             'Text-to-speech would be implemented here');
                       },
+=======
+                        fontWeight: FontWeight.w600,
+                      ),
+>>>>>>> Stashed changes
                     ),
                   ],
                 ),
@@ -641,6 +660,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
             title: const Text('Key Points'),
             leading: const Icon(Icons.key),
             children: response.keyPoints
+<<<<<<< Updated upstream
                 .map((point) => ListTile(
                       leading: const Icon(Icons.arrow_right, size: 16),
                       title: Text(point),
@@ -653,6 +673,15 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                         },
                       ),
                     ))
+=======
+                .map(
+                  (point) => ListTile(
+                    leading: const Icon(Icons.arrow_right, size: 16),
+                    title: Text(point),
+                    dense: true,
+                  ),
+                )
+>>>>>>> Stashed changes
                 .toList(),
           ),
         ],
@@ -661,6 +690,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
             title: const Text('Fun Facts'),
             leading: const Icon(Icons.star),
             children: response.funFacts
+<<<<<<< Updated upstream
                 .map((fact) => ListTile(
                       leading: const Icon(Icons.star_border, size: 16),
                       title: Text(fact),
@@ -673,6 +703,15 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                         },
                       ),
                     ))
+=======
+                .map(
+                  (fact) => ListTile(
+                    leading: const Icon(Icons.star_border, size: 16),
+                    title: Text(fact),
+                    dense: true,
+                  ),
+                )
+>>>>>>> Stashed changes
                 .toList(),
           ),
         ],
@@ -698,10 +737,13 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
               controller: _chatController,
               decoration: InputDecoration(
                 hintText: 'Ask a question...',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
               ),
               maxLines: null,
               onSubmitted: (_) => _sendMessage(),
@@ -762,18 +804,22 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
         children: [
           Text(
             'Generate Hyper-Local Content',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
             'Create culturally relevant content in your local language',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+<<<<<<< Updated upstream
                   color:
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                 ),
+=======
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
+>>>>>>> Stashed changes
           ),
           const SizedBox(height: 24),
           _buildLocalContentForm(),
@@ -963,6 +1009,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
     );
   }
 
+<<<<<<< Updated upstream
   Widget _buildLocalContentResults(AIContentResponse content) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1177,6 +1224,237 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
         _showSnackBar('Save functionality would be implemented here');
         break;
     }
+=======
+    String selectedLanguage = 'English';
+    String selectedSubject = 'General';
+    String selectedGrade = 'Mixed';
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return SahayakCard(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Content Request',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: promptController,
+                  decoration: const InputDecoration(
+                    labelText: 'What would you like me to create?',
+                    hintText:
+                        'e.g., Create a story about farmers to explain different soil types',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: selectedLanguage,
+                        decoration: const InputDecoration(
+                          labelText: 'Language',
+                          border: OutlineInputBorder(),
+                        ),
+                        items:
+                            [
+                                  'English',
+                                  'Hindi',
+                                  'Kannada',
+                                  'Marathi',
+                                  'Tamil',
+                                  'Telugu',
+                                  'Bengali',
+                                  'Gujarati',
+                                ]
+                                .map(
+                                  (lang) => DropdownMenuItem(
+                                    value: lang,
+                                    child: Text(lang),
+                                  ),
+                                )
+                                .toList(),
+                        onChanged: (value) =>
+                            setState(() => selectedLanguage = value!),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: selectedSubject,
+                        decoration: const InputDecoration(
+                          labelText: 'Subject',
+                          border: OutlineInputBorder(),
+                        ),
+                        items:
+                            [
+                                  'General',
+                                  'Mathematics',
+                                  'Science',
+                                  'English',
+                                  'Social Studies',
+                                  'Arts',
+                                ]
+                                .map(
+                                  (subject) => DropdownMenuItem(
+                                    value: subject,
+                                    child: Text(subject),
+                                  ),
+                                )
+                                .toList(),
+                        onChanged: (value) =>
+                            setState(() => selectedSubject = value!),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: selectedGrade,
+                        decoration: const InputDecoration(
+                          labelText: 'Grade Level',
+                          border: OutlineInputBorder(),
+                        ),
+                        items: ['Mixed', '1-3', '4-6', '7-9', '10-12']
+                            .map(
+                              (grade) => DropdownMenuItem(
+                                value: grade,
+                                child: Text(grade),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) =>
+                            setState(() => selectedGrade = value!),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: culturalContextController,
+                  decoration: const InputDecoration(
+                    labelText: 'Cultural Context',
+                    hintText: 'e.g., Rural farming community in Maharashtra',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 2,
+                ),
+                const SizedBox(height: 24),
+                Consumer<AIAssistantProvider>(
+                  builder: (context, aiProvider, child) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: aiProvider.isLoading
+                            ? null
+                            : () => aiProvider.generateLocalContent(
+                                prompt: promptController.text,
+                                language: selectedLanguage,
+                                culturalContext: culturalContextController.text,
+                                subject: selectedSubject,
+                                gradeLevel: selectedGrade,
+                              ),
+                        icon: aiProvider.isLoading
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.auto_awesome),
+                        label: Text(
+                          aiProvider.isLoading
+                              ? 'Generating...'
+                              : 'Generate Content',
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.all(16),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 24),
+                Consumer<AIAssistantProvider>(
+                  builder: (context, aiProvider, child) {
+                    if (aiProvider.lastContentResponse == null) {
+                      return const SizedBox();
+                    }
+                    final content = aiProvider.lastContentResponse!;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Divider(),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Generated Content',
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 12),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primaryContainer.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.language,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    '${content.language} • ${content.subject}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.copyWith(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Text(content.content),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+>>>>>>> Stashed changes
   }
 
   // ------------------------------ Differentiated Materials Tab ------------------------------
@@ -1188,18 +1466,22 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
         children: [
           Text(
             'Create Differentiated Materials',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
             'Upload a textbook page to create grade-specific worksheets',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+<<<<<<< Updated upstream
                   color:
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                 ),
+=======
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
+>>>>>>> Stashed changes
           ),
           const SizedBox(height: 24),
           _buildImageUploadSection(),
@@ -1225,8 +1507,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  border:
-                      Border.all(color: Theme.of(context).colorScheme.outline),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
@@ -1243,20 +1526,24 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
             const SizedBox(height: 16),
             Text(
               'Upload Textbook Page',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w600),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             Text(
               'Take a photo or select an image from gallery',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+<<<<<<< Updated upstream
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
                         .withOpacity(0.7),
                   ),
+=======
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
+>>>>>>> Stashed changes
             ),
             const SizedBox(height: 24),
             Row(
@@ -1296,11 +1583,67 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 const SizedBox(width: 8),
                 Text(
                   'Target Grade Levels',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
                 ),
+<<<<<<< Updated upstream
+=======
+                const SizedBox(height: 16),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: List.generate(12, (index) {
+                    final grade = (index + 1).toString();
+                    final isSelected = _selectedGrades.contains(grade);
+                    return FilterChip(
+                      label: Text('Grade $grade'),
+                      selected: isSelected,
+                      onSelected: (selected) {
+                        setState(() {
+                          if (selected) {
+                            if (!_selectedGrades.contains(grade)) {
+                              _selectedGrades.add(grade);
+                            }
+                          } else {
+                            _selectedGrades.remove(grade);
+                          }
+                        });
+                      },
+                    );
+                  }),
+                ),
+                const SizedBox(height: 24),
+                Consumer<AIAssistantProvider>(
+                  builder: (context, aiProvider, child) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed:
+                            _selectedImage == null ||
+                                _selectedGrades.isEmpty ||
+                                aiProvider.isLoading
+                            ? null
+                            : () {
+                                final bytes = _selectedImage!.readAsBytesSync();
+                                aiProvider.createDifferentiatedMaterials(
+                                  imageBytes: bytes,
+                                  targetGrades: _selectedGrades,
+                                );
+                              },
+                        icon: aiProvider.isLoading
+                            ? const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(),
+                              )
+                            : const Icon(Icons.add),
+                        label: const Text('Create Differentiated Materials'),
+                      ),
+                    );
+                  },
+                ),
+>>>>>>> Stashed changes
               ],
             ),
             const SizedBox(height: 16),
@@ -1374,6 +1717,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+<<<<<<< Updated upstream
             Row(
               children: [
                 Icon(
@@ -1389,6 +1733,13 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       ?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ],
+=======
+            Text(
+              'Generated Materials',
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+>>>>>>> Stashed changes
             ),
             const SizedBox(height: 16),
             ...response.materials
@@ -1412,8 +1763,10 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
               Row(
                 children: [
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primaryContainer,
                       borderRadius: BorderRadius.circular(20),
@@ -1443,8 +1796,10 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   children: material.activities
                       .map(
                         (activity) => ListTile(
-                          leading:
-                              const Icon(Icons.play_circle_outline, size: 16),
+                          leading: const Icon(
+                            Icons.play_circle_outline,
+                            size: 16,
+                          ),
                           title: Text(activity),
                           dense: true,
                         ),
@@ -1484,18 +1839,22 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
         children: [
           Text(
             'Generate Visual Aids',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
             'Create drawing instructions and images for blackboard diagrams',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+<<<<<<< Updated upstream
                   color:
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                 ),
+=======
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
+>>>>>>> Stashed changes
           ),
           const SizedBox(height: 24),
           _buildVisualAidForm(),
@@ -1514,6 +1873,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
   }
 
   Widget _buildVisualAidForm() {
+<<<<<<< Updated upstream
     return SahayakCard(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -1655,6 +2015,152 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           ],
         ),
       ),
+=======
+    final conceptController = TextEditingController();
+    String selectedType = 'diagram';
+    String selectedSubject = 'General';
+    String selectedGrade = 'Elementary';
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return SahayakCard(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Visual Aid Request',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: conceptController,
+                  decoration: const InputDecoration(
+                    labelText: 'Concept to Illustrate',
+                    hintText: 'e.g., Water cycle, Plant parts, Solar system',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: selectedType,
+                        decoration: const InputDecoration(
+                          labelText: 'Visual Aid Type',
+                          border: OutlineInputBorder(),
+                        ),
+                        items:
+                            [
+                                  'diagram',
+                                  'chart',
+                                  'illustration',
+                                  'flowchart',
+                                  'map',
+                                  'timeline',
+                                ]
+                                .map(
+                                  (type) => DropdownMenuItem(
+                                    value: type,
+                                    child: Text(type.capitalize()),
+                                  ),
+                                )
+                                .toList(),
+                        onChanged: (value) =>
+                            setState(() => selectedType = value!),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: selectedSubject,
+                        decoration: const InputDecoration(
+                          labelText: 'Subject',
+                          border: OutlineInputBorder(),
+                        ),
+                        items:
+                            [
+                                  'General',
+                                  'Science',
+                                  'Mathematics',
+                                  'History',
+                                  'Geography',
+                                ]
+                                .map(
+                                  (subject) => DropdownMenuItem(
+                                    value: subject,
+                                    child: Text(subject),
+                                  ),
+                                )
+                                .toList(),
+                        onChanged: (value) =>
+                            setState(() => selectedSubject = value!),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  value: selectedGrade,
+                  decoration: const InputDecoration(
+                    labelText: 'Grade Level',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: ['Elementary', 'Middle', 'High School']
+                      .map(
+                        (grade) =>
+                            DropdownMenuItem(value: grade, child: Text(grade)),
+                      )
+                      .toList(),
+                  onChanged: (value) => setState(() => selectedGrade = value!),
+                ),
+                const SizedBox(height: 24),
+                Consumer<AIAssistantProvider>(
+                  builder: (context, aiProvider, child) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed:
+                            conceptController.text.isEmpty ||
+                                aiProvider.isLoading
+                            ? null
+                            : () => aiProvider.generateVisualAid(
+                                concept: conceptController.text,
+                                type: selectedType,
+                                subject: selectedSubject,
+                                gradeLevel: selectedGrade,
+                              ),
+                        icon: aiProvider.isLoading
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.draw),
+                        label: Text(
+                          aiProvider.isLoading
+                              ? 'Generating...'
+                              : 'Generate Visual Aid',
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.all(16),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+>>>>>>> Stashed changes
     );
   }
 
@@ -1667,6 +2173,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           children: [
             Row(
               children: [
+<<<<<<< Updated upstream
                 Icon(
                   Icons.draw,
                   color: Theme.of(context).colorScheme.primary,
@@ -1679,6 +2186,39 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                         .textTheme
                         .titleLarge
                         ?.copyWith(fontWeight: FontWeight.w600),
+=======
+                Row(
+                  children: [
+                    Icon(
+                      Icons.draw,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        '${response.type.capitalize()}: ${response.concept}',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.outline.withOpacity(0.3),
+                    ),
+>>>>>>> Stashed changes
                   ),
                 ),
                 _buildContentActionButtons(response),
@@ -1771,9 +2311,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       const SizedBox(width: 8),
                       Text(
                         'Drawing Instructions',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
+                        style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       const Spacer(),
@@ -1904,6 +2442,55 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                     ],
                   ),
                 ),
+<<<<<<< Updated upstream
+=======
+                if (response.labels.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  Text(
+                    'Labels to Include',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: response.labels
+                        .map(
+                          (label) => Chip(
+                            label: Text(label),
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primaryContainer.withOpacity(0.5),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ],
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.access_time,
+                      size: 16,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.7),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Estimated time: ${response.estimatedTime} minutes',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+>>>>>>> Stashed changes
               ],
             ),
 
@@ -1924,18 +2511,22 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
         children: [
           Text(
             'Create Educational Games',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
             'Generate interactive games for classroom learning',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+<<<<<<< Updated upstream
                   color:
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                 ),
+=======
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
+>>>>>>> Stashed changes
           ),
           const SizedBox(height: 24),
           _buildGameForm(),
@@ -1954,6 +2545,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
   }
 
   Widget _buildGameForm() {
+<<<<<<< Updated upstream
     return SahayakCard(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -2123,6 +2715,182 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           ],
         ),
       ),
+=======
+    final topicController = TextEditingController();
+    String selectedGameType = 'quiz';
+    String selectedSubject = 'General';
+    String selectedGrade = 'Elementary';
+    int duration = 15;
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return SahayakCard(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Game Request',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: topicController,
+                  decoration: const InputDecoration(
+                    labelText: 'Topic',
+                    hintText:
+                        'e.g., Multiplication tables, Countries and capitals',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: selectedGameType,
+                        decoration: const InputDecoration(
+                          labelText: 'Game Type',
+                          border: OutlineInputBorder(),
+                        ),
+                        items:
+                            [
+                                  'quiz',
+                                  'memory',
+                                  'puzzle',
+                                  'activity',
+                                  'role-play',
+                                  'competition',
+                                ]
+                                .map(
+                                  (type) => DropdownMenuItem(
+                                    value: type,
+                                    child: Text(type.capitalize()),
+                                  ),
+                                )
+                                .toList(),
+                        onChanged: (value) =>
+                            setState(() => selectedGameType = value!),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: selectedSubject,
+                        decoration: const InputDecoration(
+                          labelText: 'Subject',
+                          border: OutlineInputBorder(),
+                        ),
+                        items:
+                            [
+                                  'General',
+                                  'Mathematics',
+                                  'Science',
+                                  'English',
+                                  'Social Studies',
+                                ]
+                                .map(
+                                  (subject) => DropdownMenuItem(
+                                    value: subject,
+                                    child: Text(subject),
+                                  ),
+                                )
+                                .toList(),
+                        onChanged: (value) =>
+                            setState(() => selectedSubject = value!),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: selectedGrade,
+                        decoration: const InputDecoration(
+                          labelText: 'Grade Level',
+                          border: OutlineInputBorder(),
+                        ),
+                        items: ['Elementary', 'Middle', 'High School']
+                            .map(
+                              (grade) => DropdownMenuItem(
+                                value: grade,
+                                child: Text(grade),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) =>
+                            setState(() => selectedGrade = value!),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: DropdownButtonFormField<int>(
+                        value: duration,
+                        decoration: const InputDecoration(
+                          labelText: 'Duration (minutes)',
+                          border: OutlineInputBorder(),
+                        ),
+                        items: [10, 15, 20, 30, 45]
+                            .map(
+                              (mins) => DropdownMenuItem(
+                                value: mins,
+                                child: Text('$mins min'),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) => setState(() => duration = value!),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                Consumer<AIAssistantProvider>(
+                  builder: (context, aiProvider, child) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed:
+                            topicController.text.isEmpty || aiProvider.isLoading
+                            ? null
+                            : () => aiProvider.generateGame(
+                                topic: topicController.text,
+                                gameType: selectedGameType,
+                                subject: selectedSubject,
+                                gradeLevel: selectedGrade,
+                                duration: duration,
+                              ),
+                        icon: aiProvider.isLoading
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.games),
+                        label: Text(
+                          aiProvider.isLoading
+                              ? 'Generating...'
+                              : 'Generate Game',
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.all(16),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+>>>>>>> Stashed changes
     );
   }
 
@@ -2135,6 +2903,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           children: [
             Row(
               children: [
+<<<<<<< Updated upstream
                 Icon(Icons.games, color: Theme.of(context).colorScheme.primary),
                 const SizedBox(width: 8),
                 Expanded(
@@ -2144,6 +2913,32 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                         .textTheme
                         .titleLarge
                         ?.copyWith(fontWeight: FontWeight.w600),
+=======
+                Row(
+                  children: [
+                    Icon(
+                      Icons.games,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        response.title,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                if (response.rules.isNotEmpty) ...[
+                  Text(
+                    'Game Rules',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+>>>>>>> Stashed changes
                   ),
                 ),
                 _buildContentActionButtons(response),
@@ -2267,15 +3062,15 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                     padding: const EdgeInsets.all(16),
                     margin: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primaryContainer
-                          .withOpacity(0.3),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primaryContainer.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(response.rules),
                   ),
                 ],
+<<<<<<< Updated upstream
               ),
             ],
 
@@ -2308,6 +3103,100 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   ),
                   child: Text(response.instructions),
                 ),
+=======
+                Text(
+                  'Instructions',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(response.instructions),
+                if (response.materials.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  Text(
+                    'Materials Needed',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: response.materials
+                        .map(
+                          (material) => Chip(
+                            label: Text(material),
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.secondaryContainer.withOpacity(0.5),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ],
+                if (response.learningObjectives.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  ExpansionTile(
+                    title: const Text('Learning Objectives'),
+                    leading: const Icon(Icons.flag),
+                    children: response.learningObjectives
+                        .map(
+                          (objective) => ListTile(
+                            leading: const Icon(
+                              Icons.check_circle_outline,
+                              size: 16,
+                            ),
+                            title: Text(objective),
+                            dense: true,
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ],
+                if (response.variations.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  ExpansionTile(
+                    title: const Text('Game Variations'),
+                    leading: const Icon(Icons.shuffle),
+                    children: response.variations
+                        .map(
+                          (variation) => ListTile(
+                            leading: const Icon(
+                              Icons.lightbulb_outline,
+                              size: 16,
+                            ),
+                            title: Text(variation),
+                            dense: true,
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ],
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.timer,
+                      size: 16,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.7),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Duration: ${response.duration} minutes',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+>>>>>>> Stashed changes
               ],
             ),
 
@@ -2428,18 +3317,22 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
         children: [
           Text(
             'Reading Assessment',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
             'Assess student reading with voice recording and AI analysis',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+<<<<<<< Updated upstream
                   color:
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                 ),
+=======
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
+>>>>>>> Stashed changes
           ),
           const SizedBox(height: 24),
           _buildReadingTextInput(),
@@ -2467,6 +3360,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+<<<<<<< Updated upstream
             Row(
               children: [
                 Icon(
@@ -2482,6 +3376,13 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       ?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ],
+=======
+            Text(
+              'Reading Text',
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+>>>>>>> Stashed changes
             ),
             const SizedBox(height: 16),
             TextField(
@@ -2532,16 +3433,27 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 Row(
                   children: [
                     Icon(
+<<<<<<< Updated upstream
                       Icons.mic,
+=======
+                      Icons.assessment,
+>>>>>>> Stashed changes
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     const SizedBox(width: 8),
                     Text(
+<<<<<<< Updated upstream
                       'Voice Recording',
                       style: Theme.of(context)
                           .textTheme
                           .titleLarge
                           ?.copyWith(fontWeight: FontWeight.w600),
+=======
+                      'Reading Assessment Results',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+>>>>>>> Stashed changes
                     ),
                   ],
                 ),
@@ -2578,6 +3490,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 ),
                 const SizedBox(height: 16),
                 Text(
+<<<<<<< Updated upstream
                   aiProvider.isRecording
                       ? 'Recording... Tap to stop'
                       : 'Tap to start recording',
@@ -2589,6 +3502,26 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       ),
                 ),
                 if (aiProvider.isRecording) ...[
+=======
+                  'Transcription',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(assessment.actualTranscription),
+                ),
+                if (assessment.pronunciationErrors.isNotEmpty) ...[
+>>>>>>> Stashed changes
                   const SizedBox(height: 16),
                   LinearProgressIndicator(
                     backgroundColor: Colors.red.withOpacity(0.3),
@@ -2644,11 +3577,18 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                     color: Theme.of(context).colorScheme.primary),
                 const SizedBox(width: 8),
                 Text(
+<<<<<<< Updated upstream
                   'Reading Assessment Results',
                   style: Theme.of(context)
                       .textTheme
                       .titleLarge
                       ?.copyWith(fontWeight: FontWeight.w600),
+=======
+                  'Feedback',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+>>>>>>> Stashed changes
                 ),
                 const Spacer(),
                 _buildContentActionButtons(assessment),
@@ -2880,10 +3820,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   padding: const EdgeInsets.all(16),
                   margin: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .primaryContainer
-                        .withOpacity(0.3),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primaryContainer.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(assessment.feedback),
