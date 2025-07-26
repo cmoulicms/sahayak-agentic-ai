@@ -57,7 +57,7 @@ class _LoadingWidgetState extends State<LoadingWidget>
         AnimatedBuilder(
           animation: _animation,
           builder: (context, child) {
-            return Container(
+            return SizedBox(
               width: widget.size,
               height: widget.size,
               child: Stack(
@@ -69,7 +69,7 @@ class _LoadingWidgetState extends State<LoadingWidget>
                       strokeWidth: 3,
                       color: widget.color ?? theme.colorScheme.primary,
                       backgroundColor:
-                          theme.colorScheme.surfaceVariant.withOpacity(0.3),
+                          theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
                     ),
                   ),
                   // Inner pulsing circle

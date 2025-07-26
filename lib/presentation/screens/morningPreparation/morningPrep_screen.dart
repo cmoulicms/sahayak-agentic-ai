@@ -226,7 +226,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
                 const SizedBox(height: 8),
                 LinearProgressIndicator(
                   value: progress,
-                  backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                  backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                   valueColor: AlwaysStoppedAnimation<Color>(
                     Theme.of(context).colorScheme.primary,
                   ),
@@ -303,7 +303,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
                 decoration: BoxDecoration(
                   color: Theme.of(context)
                       .colorScheme
-                      .surfaceVariant
+                      .surfaceContainerHighest
                       .withOpacity(0.5),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
@@ -396,7 +396,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
         ...tasksByCategory.entries.map((entry) {
           return _buildTaskCategory(
               context, entry.key, entry.value, lessonProvider);
-        }).toList(),
+        }),
       ],
     );
   }
@@ -429,7 +429,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
             const SizedBox(height: 12),
             ...tasks
                 .map((task) => _buildTaskItem(context, task, lessonProvider))
-                .toList(),
+                ,
           ],
         ),
       ),
@@ -444,7 +444,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
       decoration: BoxDecoration(
         color: task.isCompleted
             ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3)
-            : Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+            : Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: task.isCompleted
@@ -581,7 +581,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
                         ],
                       ),
                     ))
-                .toList(),
+                ,
           ],
         ),
       ),
@@ -622,7 +622,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
                       decoration: BoxDecoration(
                         color: Theme.of(context)
                             .colorScheme
-                            .surfaceVariant
+                            .surfaceContainerHighest
                             .withOpacity(0.3),
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -674,7 +674,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
                         ],
                       ),
                     ))
-                .toList(),
+                ,
             if (todayLessons.length > 3)
               Padding(
                 padding: const EdgeInsets.only(top: 8),

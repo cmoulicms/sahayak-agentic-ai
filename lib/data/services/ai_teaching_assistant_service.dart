@@ -4,7 +4,8 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:myapp/data/models/aiModels/ai_models.dart';
 import 'package:path_provider/path_provider.dart';
-// import 'package:record/record.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:record/record.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
@@ -21,7 +22,7 @@ class AITeachingAssistantService {
 
   // Initialize services
   final stt.SpeechToText _speechToText = stt.SpeechToText();
-  // final AudioRecorder _record = AudioRecorder();
+  final AudioRecorder _record = AudioRecorder();
   final FlutterTts _flutterTts = FlutterTts();
   String? _recordingPath;
 
@@ -310,57 +311,57 @@ Format the response as structured data that can be easily parsed.
   }
 
   // Audio recording methods
-  // Future<void> startRecording() async {
-  //   try {
-  //     final status = await Permission.microphone.request();
-  //     if (status != PermissionStatus.granted) {
-  //       throw Exception('Microphone permission not granted');
-  //     }
+  Future<void> startRecording() async {
+    try {
+      final status = await Permission.microphone.request();
+      if (status != PermissionStatus.granted) {
+        throw Exception('Microphone permission not granted');
+      }
 
-  //     if (await _record.hasPermission()) {
-  //       final Directory tempDir = await getTemporaryDirectory();
-  //       final String path =
-  //           '${tempDir.path}/recording_${DateTime.now().millisecondsSinceEpoch}.m4a';
+      if (await _record.hasPermission()) {
+        final Directory tempDir = await getTemporaryDirectory();
+        final String path =
+            '${tempDir.path}/recording_${DateTime.now().millisecondsSinceEpoch}.m4a';
 
-  //       await _record.start(
-  //         const RecordConfig(
-  //           encoder: AudioEncoder.aacLc,
-  //           bitRate: 128000,
-  //           sampleRate: 44100,
-  //         ),
-  //         path: path,
-  //       );
-  //       _recordingPath = path;
-  //     } else {
-  //       throw Exception('Recording permission not granted');
-  //     }
-  //   } catch (e) {
-  //     throw AIServiceException('Failed to start recording: $e');
-  //   }
-  // }
+        await _record.start(
+          const RecordConfig(
+            encoder: AudioEncoder.aacLc,
+            bitRate: 128000,
+            sampleRate: 44100,
+          ),
+          path: path,
+        );
+        _recordingPath = path;
+      } else {
+        throw Exception('Recording permission not granted');
+      }
+    } catch (e) {
+      throw AIServiceException('Failed to start recording: $e');
+    }
+  }
 
-  // Future<Uint8List?> stopRecording() async {
-  //   try {
-  //     final String? path = await _record.stop();
-  //     if (path != null && _recordingPath != null) {
-  //       final File audioFile = File(_recordingPath!);
-  //       if (await audioFile.exists()) {
-  //         final Uint8List audioBytes = await audioFile.readAsBytes();
-  //         await audioFile.delete();
-  //         _recordingPath = null;
-  //         return audioBytes;
-  //       }
-  //     }
-  //     _recordingPath = null;
-  //     return null;
-  //   } catch (e) {
-  //     throw AIServiceException('Failed to stop recording: $e');
-  //   }
-  // }
+  Future<Uint8List?> stopRecording() async {
+    try {
+      final String? path = await _record.stop();
+      if (path != null && _recordingPath != null) {
+        final File audioFile = File(_recordingPath!);
+        if (await audioFile.exists()) {
+          final Uint8List audioBytes = await audioFile.readAsBytes();
+          await audioFile.delete();
+          _recordingPath = null;
+          return audioBytes;
+        }
+      }
+      _recordingPath = null;
+      return null;
+    } catch (e) {
+      throw AIServiceException('Failed to stop recording: $e');
+    }
+  }
 
-  // Future<bool> isRecording() async {
-  //   return await _record.isRecording();
-  // }
+  Future<bool> isRecording() async {
+    return await _record.isRecording();
+  }
 
   // Private helper methods
   Future<Map<String, dynamic>> _callGeminiAPI(String prompt) async {

@@ -23,7 +23,7 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
   String _selectedSubject = 'All';
-  LessonStatus _selectedStatus = LessonStatus.draft;
+  final LessonStatus _selectedStatus = LessonStatus.draft;
 
   @override
   void initState() {
@@ -270,7 +270,7 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
             ),
             filled: true,
             fillColor:
-                Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+                Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
           ),
         ),
       ],
@@ -401,7 +401,7 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
       selected: isSelected,
       onSelected: (_) => onTap(),
       backgroundColor:
-          Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+          Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
       selectedColor: Theme.of(context).colorScheme.primaryContainer,
     );
   }
@@ -788,7 +788,7 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+        color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(

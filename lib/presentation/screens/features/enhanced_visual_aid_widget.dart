@@ -10,12 +10,12 @@ class EnhancedVisualAidWidget extends StatelessWidget {
   final VoidCallback? onSpeak;
 
   const EnhancedVisualAidWidget({
-    Key? key,
+    super.key,
     required this.visualAid,
     this.onShare,
     this.onDownload,
     this.onSpeak,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class EnhancedVisualAidWidget extends StatelessWidget {
           children: [
             // Visual display (SVG or image)
             if (visualAid.svgContent != null)
-              Container(
+              SizedBox(
                 height: 200,
                 width: double.infinity,
                 child: SvgPicture.string(

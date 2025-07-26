@@ -155,7 +155,7 @@ class DashboardHome extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
 
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: Card(
                     elevation: 4,

@@ -1,13 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:myapp/data/models/aiModels/ai_models.dart';
 import 'package:myapp/data/services/ai_teaching_assistant_service.dart';
-import 'package:sahayak_ai2/data/models/aiModels/ai_models.dart';
-import 'package:sahayak_ai2/data/services/ai_teaching_assistant_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -366,26 +362,26 @@ class AIAssistantProvider extends ChangeNotifier {
   }
 
   // Audio recording methods
-  // Future<void> startRecording() async {
-  //   try {
-  //     await _aiService.startRecording();
-  //     _setRecording(true);
-  //   } catch (e) {
-  //     _setError('Failed to start recording: $e');
-  //   }
-  // }
+  Future<void> startRecording() async {
+    try {
+      await _aiService.startRecording();
+      _setRecording(true);
+    } catch (e) {
+      _setError('Failed to start recording: $e');
+    }
+  }
 
-  // Future<Uint8List?> stopRecording() async {
-  //   try {
-  //     final audioBytes = await _aiService.stopRecording();
-  //     _setRecording(false);
-  //     return audioBytes;
-  //   } catch (e) {
-  //     _setError('Failed to stop recording: $e');
-  //     _setRecording(false);
-  //     return null;
-  //   }
-  // }
+  Future<Uint8List?> stopRecording() async {
+    try {
+      final audioBytes = await _aiService.stopRecording();
+      _setRecording(false);
+      return audioBytes;
+    } catch (e) {
+      _setError('Failed to stop recording: $e');
+      _setRecording(false);
+      return null;
+    }
+  }
 
   // PDF Generation functionality
   Future<String> generatePDF({

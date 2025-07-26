@@ -7,9 +7,9 @@ class ReadingAssessmentWidget extends StatefulWidget {
   final String expectedText;
 
   const ReadingAssessmentWidget({
-    Key? key,
+    super.key,
     required this.expectedText,
-  }) : super(key: key);
+  });
 
   @override
   State<ReadingAssessmentWidget> createState() =>

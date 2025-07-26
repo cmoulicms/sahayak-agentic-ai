@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 
 class SavedContentScreen extends StatelessWidget {
-  const SavedContentScreen({Key? key}) : super(key: key);
+  const SavedContentScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

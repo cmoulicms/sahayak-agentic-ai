@@ -60,8 +60,9 @@ dependencies:
   permission_handler: ^11.1.0 # Add this for permissions
   file_picker: ^8.0.7
   flutter_tts: ^3.8.5
-  speech_to_text: ^6.6.0
+  speech_to_text: ^7.2.0
   share_plus: ^7.2.1
+  record: ^6.0.0
 
 dev_dependencies:
   flutter_test:

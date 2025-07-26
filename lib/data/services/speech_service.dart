@@ -1,7 +1,7 @@
-import 'dart:typed_data';
 
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+// import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SpeechService {
   static final SpeechService _instance = SpeechService._internal();
@@ -45,10 +45,10 @@ class SpeechService {
       });
 
       // Initialize Speech Recognition
-      _isInitialized = await _speechToText.initialize(
-        onStatus: (status) => print('Speech recognition status: $status'),
-        onError: (error) => print('Speech recognition error: $error'),
-      );
+      // _isInitialized = await _speechToText.initialize(
+      //   onStatus: (status) => print('Speech recognition status: $status'),
+      //   onError: (error) => print('Speech recognition error: $error'),
+      // );
 
       return _isInitialized;
     } catch (e) {
@@ -118,7 +118,7 @@ class SpeechService {
     }
   }
 
-  // Speech-to-Text methods
+  // // Speech-to-Text methods
   Future<bool> startListening({
     String? localeId,
     Function(String)? onResult,

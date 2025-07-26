@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:path_provider/path_provider.dart';
 
 class ContentSharingUtils {
   static Future<void> shareText({

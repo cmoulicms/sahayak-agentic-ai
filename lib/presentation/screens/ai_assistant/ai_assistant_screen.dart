@@ -42,7 +42,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
   String _selectedVisualType = 'diagram';
   String _selectedGameType = 'quiz';
   int _selectedDuration = 15;
-  List<String> _selectedGrades = ['4', '5', '6'];
+  final List<String> _selectedGrades = ['4', '5', '6'];
 
   @override
   void initState() {
@@ -172,7 +172,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
     showDialog(
       context: context,
       builder: (context) => Dialog(
-        child: Container(
+        child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.9,
           height: MediaQuery.of(context).size.height * 0.8,
           child: Column(
@@ -493,7 +493,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                     ? Theme.of(context).colorScheme.primaryContainer
                     : message.isError
                         ? Theme.of(context).colorScheme.errorContainer
-                        : Theme.of(context).colorScheme.surfaceVariant,
+                        : Theme.of(context).colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
@@ -1393,7 +1393,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
             const SizedBox(height: 16),
             ...response.materials
                 .map((material) => _buildGradeMaterial(material))
-                .toList(),
+                ,
           ],
         );
       },
@@ -1705,7 +1705,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                           response.svgContent!,
                           fit: BoxFit.contain,
                           placeholderBuilder: (context) => Container(
-                            color: Theme.of(context).colorScheme.surfaceVariant,
+                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
                             child: Center(
                               child: Icon(
                                 Icons.draw,
@@ -1718,7 +1718,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                           ),
                         )
                       : Container(
-                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
                           child: Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -1751,7 +1751,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
               decoration: BoxDecoration(
                 color: Theme.of(context)
                     .colorScheme
-                    .surfaceVariant
+                    .surfaceContainerHighest
                     .withOpacity(0.5),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
@@ -2302,7 +2302,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   decoration: BoxDecoration(
                     color: Theme.of(context)
                         .colorScheme
-                        .surfaceVariant
+                        .surfaceContainerHighest
                         .withOpacity(0.5),
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -2626,7 +2626,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
   // }
 
   Widget _buildReadingAssessmentResults(ReadingAssessmentResponse assessment) {
-    Color _getScoreColor(double score) {
+    Color getScoreColor(double score) {
       if (score >= 80) return Colors.green;
       if (score >= 60) return Colors.orange;
       return Colors.red;
@@ -2663,11 +2663,11 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: _getScoreColor(assessment.accuracyPercentage)
+                      color: getScoreColor(assessment.accuracyPercentage)
                           .withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: _getScoreColor(assessment.accuracyPercentage),
+                        color: getScoreColor(assessment.accuracyPercentage),
                         width: 2,
                       ),
                     ),
@@ -2675,7 +2675,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       children: [
                         Icon(
                           Icons.check_circle,
-                          color: _getScoreColor(assessment.accuracyPercentage),
+                          color: getScoreColor(assessment.accuracyPercentage),
                           size: 32,
                         ),
                         const SizedBox(height: 8),
@@ -2685,7 +2685,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                               .textTheme
                               .headlineSmall
                               ?.copyWith(
-                                color: _getScoreColor(
+                                color: getScoreColor(
                                     assessment.accuracyPercentage),
                                 fontWeight: FontWeight.bold,
                               ),

@@ -352,12 +352,10 @@ class LessonProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }
 
 extension on MorningPrepData {
-  MorningPrepData? copyWith({required List<MorningPrepTask> tasks}) {}
+  MorningPrepData? copyWith({required List<MorningPrepTask> tasks}) {
+    return null;
+  }
 }
