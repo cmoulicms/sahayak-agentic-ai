@@ -1,11 +1,14 @@
 // screens/morning_prep/morning_prep_screen.dart
 import 'package:flutter/material.dart';
 import 'package:myapp/data/models/lesson/enhanced_lesson_plan.dart';
+import 'package:myapp/data/models/morningPrep/morningPrep_model.dart';
 import 'package:myapp/presentation/widgets/error_widget.dart';
 import 'package:myapp/presentation/widgets/loading_widget.dart';
-import 'package:myapp/presentation/widgets/sahayakCard.dart';
+import 'package:myapp/presentation/widgets/shayakCard.dart';
 import 'package:provider/provider.dart';
+
 // import 'package:intl/intl.dart'; // Ensure this import is present for DateFormat
+
 import '../../providers/lesson_provider.dart';
 
 class MorningPrepScreen extends StatefulWidget {
@@ -144,7 +147,8 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
             const SizedBox(height: 16),
 
             // Quick tips
-            _buildQuickTipsCard(context, morningPrep.quickTips),
+            _buildQuickTipsCard(
+                context, morningPrep.aiTips.map((tip) => tip.title).toList()),
             const SizedBox(height: 16),
 
             // Today's lessons preview
@@ -222,7 +226,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
                 const SizedBox(height: 8),
                 LinearProgressIndicator(
                   value: progress,
-                  backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
                   valueColor: AlwaysStoppedAnimation<Color>(
                     Theme.of(context).colorScheme.primary,
                   ),
@@ -299,7 +303,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
                 decoration: BoxDecoration(
                   color: Theme.of(context)
                       .colorScheme
-                      .surfaceContainerHighest
+                      .surfaceVariant
                       .withOpacity(0.5),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
@@ -392,7 +396,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
         ...tasksByCategory.entries.map((entry) {
           return _buildTaskCategory(
               context, entry.key, entry.value, lessonProvider);
-        }),
+        }).toList(),
       ],
     );
   }
@@ -425,7 +429,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
             const SizedBox(height: 12),
             ...tasks
                 .map((task) => _buildTaskItem(context, task, lessonProvider))
-                ,
+                .toList(),
           ],
         ),
       ),
@@ -440,7 +444,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
       decoration: BoxDecoration(
         color: task.isCompleted
             ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3)
-            : Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+            : Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: task.isCompleted
@@ -577,7 +581,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
                         ],
                       ),
                     ))
-                ,
+                .toList(),
           ],
         ),
       ),
@@ -618,7 +622,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
                       decoration: BoxDecoration(
                         color: Theme.of(context)
                             .colorScheme
-                            .surfaceContainerHighest
+                            .surfaceVariant
                             .withOpacity(0.3),
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -670,7 +674,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen>
                         ],
                       ),
                     ))
-                ,
+                .toList(),
             if (todayLessons.length > 3)
               Padding(
                 padding: const EdgeInsets.only(top: 8),

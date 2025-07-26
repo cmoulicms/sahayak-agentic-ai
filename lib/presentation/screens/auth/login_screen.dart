@@ -129,9 +129,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
-                          if (value?.isEmpty ?? true) {
+                          if (value?.isEmpty ?? true)
                             return 'Please enter your name';
-                          }
                           return null;
                         },
                       ),
@@ -148,9 +147,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         border: OutlineInputBorder(),
                       ),
                       validator: (value) {
-                        if (value?.isEmpty ?? true) {
+                        if (value?.isEmpty ?? true)
                           return 'Please enter your email';
-                        }
                         if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
                             .hasMatch(value!)) {
                           return 'Please enter a valid email';
@@ -171,9 +169,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         border: OutlineInputBorder(),
                       ),
                       validator: (value) {
-                        if (value?.isEmpty ?? true) {
+                        if (value?.isEmpty ?? true)
                           return 'Please enter your password';
-                        }
                         if (_isSignUp && (value?.length ?? 0) < 6) {
                           return 'Password must be at least 6 characters';
                         }

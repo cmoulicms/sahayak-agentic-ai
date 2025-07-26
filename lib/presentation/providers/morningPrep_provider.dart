@@ -8,13 +8,13 @@ class MorningPrepProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  MorningPrepSession? _currentSession;
+  MorningPrepData? _currentSession;
   bool _isLoading = false;
   String? _error;
   List<PrepTip> _todaysTips = [];
 
   // Getters
-  MorningPrepSession? get currentSession => _currentSession;
+  MorningPrepData? get currentSession => _currentSession;
   bool get isLoading => _isLoading;
   String? get error => _error;
   List<PrepTip> get todaysTips => _todaysTips;
@@ -42,8 +42,7 @@ class MorningPrepProvider extends ChangeNotifier {
           .get();
 
       if (sessionDoc.docs.isNotEmpty) {
-        _currentSession =
-            MorningPrepSession.fromMap(sessionDoc.docs.first.data());
+        _currentSession = MorningPrepData.fromMap(sessionDoc.docs.first.data());
       } else {
         // Create new session
         _currentSession = await _createNewSession(today);
@@ -59,13 +58,13 @@ class MorningPrepProvider extends ChangeNotifier {
     }
   }
 
-  Future<MorningPrepSession> _createNewSession(DateTime date) async {
+  Future<MorningPrepData> _createNewSession(DateTime date) async {
     final sessionId = _firestore.collection('dummy').doc().id;
 
     // Generate AI-powered prep data
     final prepData = await _generateMorningPrepData();
 
-    final session = MorningPrepSession(
+    final session = MorningPrepData(
       id: sessionId,
       teacherId: _auth.currentUser!.uid,
       date: date,
@@ -78,6 +77,9 @@ class MorningPrepProvider extends ChangeNotifier {
       isCompleted: false,
       duration: 0,
       createdAt: DateTime.now(),
+      tasks: [],
+      weather: WeatherInfo.fromMap({}), // Placeholder for weather data
+      moodCheckIn: MoodCheckIn.fromMap({}), // Placeholder for mood check-in
     );
 
     // Save to Firebase
@@ -187,7 +189,7 @@ class MorningPrepProvider extends ChangeNotifier {
     if (_currentSession == null || _auth.currentUser == null) return;
 
     try {
-      final updatedSession = MorningPrepSession(
+      final updatedSession = MorningPrepData(
         id: _currentSession!.id,
         teacherId: _currentSession!.teacherId,
         date: _currentSession!.date,
@@ -199,6 +201,9 @@ class MorningPrepProvider extends ChangeNotifier {
         isCompleted: true,
         duration: actualDuration,
         createdAt: _currentSession!.createdAt,
+        tasks: _currentSession!.tasks,
+        weather: _currentSession!.weather,
+        moodCheckIn: _currentSession!.moodCheckIn,
       );
 
       await _firestore
@@ -233,7 +238,7 @@ class MorningPrepProvider extends ChangeNotifier {
         'wellnessCheck': wellness,
       });
 
-      _currentSession = MorningPrepSession(
+      _currentSession = MorningPrepData(
         id: _currentSession!.id,
         teacherId: _currentSession!.teacherId,
         date: _currentSession!.date,
@@ -245,6 +250,9 @@ class MorningPrepProvider extends ChangeNotifier {
         isCompleted: _currentSession!.isCompleted,
         duration: _currentSession!.duration,
         createdAt: _currentSession!.createdAt,
+        tasks: _currentSession!.tasks,
+        weather: _currentSession!.weather,
+        moodCheckIn: _currentSession!.moodCheckIn,
       );
 
       notifyListeners();

@@ -2,7 +2,7 @@ name: myapp
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -33,21 +33,35 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  intl: ^0.20.2
   cupertino_icons: ^1.0.8
-  firebase_core: ^3.15.1
-  firebase_ai: ^2.3.0
-  firebase_auth: ^5.7.0
-  image_picker: ^1.1.2
-  cloud_firestore: ^5.6.12
-  google_fonts: ^6.2.1
-  provider: ^6.1.5
-  material_symbols_icons: ^4.2815.1
+  firebase_core: ^2.32.0
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.15.1
+  firebase_storage: ^11.5.6
+  firebase_analytics: ^10.7.4
+  firebase_messaging: ^14.7.10
+  provider: ^6.1.1
   flutter_svg: ^2.2.0
-  flutter_secure_storage: ^9.2.4
-  google_sign_in: ^7.1.1
-  shared_preferences: ^2.5.3
-  http: ^1.4.0
+  shared_preferences: ^2.2.2
+  hive: ^2.2.3
   hive_flutter: ^1.1.0
+  dio: ^5.2.0
+  googleapis: ^11.0.0
+  # googleapis_auth: ^2.4.0
+  google_sign_in: ^6.1.0
+  http: ^1.1.0
+  pdf: ^3.10.7
+  path_provider: ^2.1.1
+  image_picker: ^1.0.4
+  cached_network_image: ^3.3.0
+  sqflite: ^2.3.2
+  # record: ^5.0.4 # Make sure this version is correct
+  permission_handler: ^11.1.0 # Add this for permissions
+  file_picker: ^8.0.7
+  flutter_tts: ^3.8.5
+  speech_to_text: ^6.6.0
+  share_plus: ^7.2.1
 
 dev_dependencies:
   flutter_test:
@@ -65,7 +79,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

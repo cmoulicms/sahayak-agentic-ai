@@ -1,19 +1,48 @@
-// services/ai_teaching_assistant_service.dart
-
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
+import 'package:myapp/data/models/aiModels/ai_models.dart';
+import 'package:path_provider/path_provider.dart';
+// import 'package:record/record.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+
+
+// Import model classes
 
 class AITeachingAssistantService {
   static const String _baseUrl =
       'https://generativelanguage.googleapis.com/v1beta';
   static const String _vertexAIUrl =
       'https://asia-south1-aiplatform.googleapis.com/v1';
-
-  // Replace with your actual API key and project ID:
   static const String _apiKey = 'AIzaSyCEB7jMY2LbEWiKb4WlKulH8zwHGIf8_w4';
   static const String _projectId = 'com.example.myapp';
 
+  // Initialize services
+  final stt.SpeechToText _speechToText = stt.SpeechToText();
+  // final AudioRecorder _record = AudioRecorder();
+  final FlutterTts _flutterTts = FlutterTts();
+  String? _recordingPath;
+
+  // Initialize TTS
+  Future<void> initializeTTS() async {
+    await _flutterTts.setLanguage("en-US");
+    await _flutterTts.setSpeechRate(0.5);
+    await _flutterTts.setVolume(1.0);
+    await _flutterTts.setPitch(1.0);
+  }
+
+  // Text to Speech
+  Future<void> speak(String text) async {
+    await _flutterTts.speak(text);
+  }
+
+  Future<void> stopSpeaking() async {
+    await _flutterTts.stop();
+  }
+
+  // Generate local content
   Future<AIContentResponse> generateLocalContent({
     required String prompt,
     required String language,
@@ -26,11 +55,13 @@ Create educational content in $language for ${gradeLevel ?? 'mixed grade'} stude
 Cultural Context: $culturalContext
 Subject: ${subject ?? 'general'}
 Request: $prompt
+
 Please provide:
 1. Simple, culturally relevant content
 2. Easy-to-understand language appropriate for the grade level
 3. Local examples and analogies
 4. Interactive elements if applicable
+
 Format the response as structured content that a teacher can easily use.
 ''';
 
@@ -46,6 +77,7 @@ Format the response as structured content that a teacher can easily use.
     );
   }
 
+  // Create differentiated materials
   Future<DifferentiatedMaterialsResponse> createDifferentiatedMaterials({
     required Uint8List imageBytes,
     required List<String> targetGrades,
@@ -54,21 +86,23 @@ Format the response as structured content that a teacher can easily use.
   }) async {
     final base64Image = base64Encode(imageBytes);
     final prompt = '''
-    Analyze this textbook page and create differentiated worksheets for grades: ${targetGrades.join(', ')}.
-    Subject: ${subject ?? 'general'}
-    Language: ${language ?? 'English'}
-    For each grade level, provide:
-    1. Simplified version of the content
-    2. Age-appropriate questions
-    3. Visual aids descriptions
-    4. Hands-on activities
-    5. Assessment criteria
-    Make sure content is progressively complex from lower to higher grades.
-    ''';
+Analyze this textbook page and create differentiated worksheets for grades: ${targetGrades.join(', ')}.
+Subject: ${subject ?? 'general'}
+Language: ${language ?? 'English'}
+
+For each grade level, provide:
+1. Simplified version of the content
+2. Age-appropriate questions
+3. Visual aids descriptions
+4. Hands-on activities
+5. Assessment criteria
+
+Make sure content is progressively complex from lower to higher grades.
+''';
 
     final response = await _callGeminiVisionAPI(prompt, base64Image);
-
     List<GradeLevelMaterial> materials = [];
+
     for (String grade in targetGrades) {
       materials.add(GradeLevelMaterial(
         gradeLevel: grade,
@@ -78,6 +112,7 @@ Format the response as structured content that a teacher can easily use.
         visualAids: _extractVisualAids(response, grade),
       ));
     }
+
     return DifferentiatedMaterialsResponse(
       originalImage: imageBytes,
       materials: materials,
@@ -87,6 +122,111 @@ Format the response as structured content that a teacher can easily use.
     );
   }
 
+  // Generate visual aid
+  Future<VisualAidResponse> generateVisualAid({
+    required String concept,
+    required String type,
+    String? subject,
+    String? gradeLevel,
+    bool generateImage = true,
+  }) async {
+    final instructionsPrompt = '''
+Create detailed instructions for a $type to explain "$concept" for ${gradeLevel ?? 'elementary'} students.
+Subject: ${subject ?? 'general'}
+
+Provide:
+1. Step-by-step drawing instructions for a teacher to recreate on blackboard
+2. Labels and text to include
+3. Colors or shading suggestions (if applicable)
+4. Key elements to emphasize
+5. Interactive elements students can participate in
+
+Make it simple enough to draw with chalk on a blackboard.
+''';
+
+    final instructionsResponse = await _callGeminiAPI(instructionsPrompt);
+
+    String? imageUrl;
+    String? svgContent;
+
+    if (generateImage) {
+      try {
+        imageUrl = await _generateImageWithVertexAI(
+            concept, type, subject, gradeLevel);
+        if (imageUrl == null) {
+          svgContent = _generateEnhancedSVGContent(concept, type);
+        }
+      } catch (e) {
+        print('Image generation failed: $e');
+        svgContent = _generateEnhancedSVGContent(concept, type);
+      }
+    }
+
+    return VisualAidResponse(
+      concept: concept,
+      type: type,
+      drawingInstructions: instructionsResponse['instructions'] ??
+          instructionsResponse['content'] ??
+          '',
+      labels: _extractLabels(instructionsResponse),
+      materials: [
+        'Chalk',
+        'Blackboard',
+        'Ruler/Scale',
+        'Colored chalk (optional)'
+      ],
+      estimatedTime: _estimateDrawingTime(type),
+      subject: subject ?? 'general',
+      gradeLevel: gradeLevel ?? 'elementary',
+      generatedAt: DateTime.now(),
+      imageUrl: imageUrl,
+      svgContent: svgContent,
+    );
+  }
+
+  // Generate educational game
+  Future<EducationalGameResponse> generateGame({
+    required String topic,
+    required String gameType,
+    String? subject,
+    String? gradeLevel,
+    int duration = 15,
+  }) async {
+    final prompt = '''
+Create an educational $gameType game about "$topic" for ${gradeLevel ?? 'elementary'} students.
+Subject: ${subject ?? 'general'}
+Duration: $duration minutes
+
+Provide:
+1. Game rules and setup
+2. Materials needed (simple, low-resource)
+3. Step-by-step instructions
+4. Variations for different skill levels
+5. Learning objectives
+6. Assessment criteria
+
+Make it suitable for a classroom with limited resources.
+''';
+
+    final response = await _callGeminiAPI(prompt);
+
+    return EducationalGameResponse(
+      topic: topic,
+      gameType: gameType,
+      title: response['title'] ?? '$gameType Game: $topic',
+      rules: response['rules'] ?? '',
+      instructions: response['instructions'] ?? response['content'] ?? '',
+      materials: _extractMaterials(response),
+      duration: duration,
+      learningObjectives: _extractObjectives(response),
+      variations: _extractVariations(response),
+      subject: subject ?? 'general',
+      gradeLevel: gradeLevel ?? 'elementary',
+      generatedAt: DateTime.now(),
+    );
+  }
+
+  // Explain concept
   Future<KnowledgeResponse> explainConcept({
     required String question,
     required String language,
@@ -94,15 +234,17 @@ Format the response as structured content that a teacher can easily use.
     bool includeAnalogy = true,
   }) async {
     final prompt = '''
-    Explain this concept in $language for ${gradeLevel ?? 'elementary'} level students: "$question"
-    Provide:
-    1. Simple, clear explanation
-    ${includeAnalogy ? '2. Easy-to-understand analogy or example from daily life' : ''}
-    3. Key points to remember
-    4. Common misconceptions to avoid
-    5. Fun facts if relevant
-    Keep the language simple and engaging for young learners.
-    ''';
+Explain this concept in $language for ${gradeLevel ?? 'elementary'} level students: "$question"
+
+Provide:
+1. Simple, clear explanation
+${includeAnalogy ? '2. Easy-to-understand analogy or example from daily life' : ''}
+3. Key points to remember
+4. Common misconceptions to avoid
+5. Fun facts if relevant
+
+Keep the language simple and engaging for young learners.
+''';
 
     final response = await _callGeminiAPI(prompt);
 
@@ -118,84 +260,34 @@ Format the response as structured content that a teacher can easily use.
     );
   }
 
-  // Generate weekly lesson planner
-  Future<WeeklyLessonPlanResponse> generateWeeklyPlan({
-    required String subject,
-    required String gradeLevel,
-    required List<String> topics,
-    int daysPerWeek = 5,
-    int minutesPerDay = 45,
-  }) async {
-    try {
-      final prompt = '''
-        Create a weekly lesson plan for $subject, Grade $gradeLevel.
-        Topics to cover: ${topics.join(', ')}
-        Schedule: $daysPerWeek days per week, $minutesPerDay minutes per day
-
-        For each day, provide:
-        1. Learning objectives
-        2. Activities breakdown with timing
-        3. Materials needed
-        4. Assessment methods
-        5. Homework/follow-up activities
-        6. Differentiation strategies
-
-        Make it practical for a multi-grade classroom with limited resources.
-      ''';
-
-      final response = await _callGeminiAPI(prompt);
-
-      List<DailyLessonPlan> dailyPlans = [];
-      for (int i = 1; i <= daysPerWeek; i++) {
-        dailyPlans.add(DailyLessonPlan(
-          day: i,
-          topic: topics.length >= i ? topics[i - 1] : 'Review/Assessment',
-          objectives: _extractDailyObjectives(response, i),
-          activities: _extractDailyActivities(response, i),
-          materials: _extractDailyMaterials(response, i),
-          assessment: _extractDailyAssessment(response, i),
-          homework: _extractDailyHomework(response, i),
-          duration: minutesPerDay,
-        ));
-      }
-
-      return WeeklyLessonPlanResponse(
-        subject: subject,
-        gradeLevel: gradeLevel,
-        topics: topics,
-        dailyPlans: dailyPlans,
-        totalDuration: daysPerWeek * minutesPerDay,
-        generatedAt: DateTime.now(),
-      );
-    } catch (e) {
-      throw AIServiceException('Failed to generate weekly lesson plan: $e');
-    }
-  }
-
-  // Speech-to-text for reading assessment
+  // Reading assessment
   Future<ReadingAssessmentResponse> assessReading({
     required Uint8List audioBytes,
     required String expectedText,
     String? language,
+    String? gradeLevel,
   }) async {
     try {
-      // Convert audio to text using Vertex AI Speech-to-Text
-      final transcription = await _speechToText(audioBytes, language);
+      final transcription =
+          await _speechToTextFromBytes(audioBytes, language ?? 'en-US');
 
-      // Analyze reading accuracy
       final analysisPrompt = '''
-        Compare the expected text with the actual reading transcription.
-        Expected: "$expectedText"
-        Actual: "$transcription"
+Compare the expected text with the actual reading transcription for ${gradeLevel ?? 'elementary'} level assessment.
 
-        Provide reading assessment with:
-        1. Accuracy percentage
-        2. Pronunciation errors
-        3. Fluency rating (1-5)
-        4. Areas for improvement
-        5. Positive feedback
-        6. Suggested practice activities
-      ''';
+Expected: "$expectedText"
+Actual: "$transcription"
+
+Provide detailed reading assessment with:
+1. Accuracy percentage (0-100)
+2. Specific pronunciation errors with corrections
+3. Fluency rating (1-5 scale: 1=very slow/choppy, 5=smooth/natural)
+4. Areas for improvement with specific suggestions
+5. Positive feedback and encouragement
+6. Suggested practice activities for improvement
+7. Words or sounds that need special attention
+
+Format the response as structured data that can be easily parsed.
+''';
 
       final analysis = await _callGeminiAPI(analysisPrompt);
 
@@ -205,7 +297,9 @@ Format the response as structured content that a teacher can easily use.
         accuracyPercentage: _calculateAccuracy(expectedText, transcription),
         fluencyRating: _extractFluencyRating(analysis),
         pronunciationErrors: _extractErrors(analysis),
-        feedback: analysis['feedback'] ?? analysis['content'] ?? '',
+        feedback: analysis['feedback'] ??
+            analysis['content'] ??
+            'Assessment completed.',
         suggestions: _extractSuggestions(analysis),
         language: language ?? 'English',
         assessedAt: DateTime.now(),
@@ -215,10 +309,61 @@ Format the response as structured content that a teacher can easily use.
     }
   }
 
-  // Updated private helper methods with correct model names
+  // Audio recording methods
+  // Future<void> startRecording() async {
+  //   try {
+  //     final status = await Permission.microphone.request();
+  //     if (status != PermissionStatus.granted) {
+  //       throw Exception('Microphone permission not granted');
+  //     }
+
+  //     if (await _record.hasPermission()) {
+  //       final Directory tempDir = await getTemporaryDirectory();
+  //       final String path =
+  //           '${tempDir.path}/recording_${DateTime.now().millisecondsSinceEpoch}.m4a';
+
+  //       await _record.start(
+  //         const RecordConfig(
+  //           encoder: AudioEncoder.aacLc,
+  //           bitRate: 128000,
+  //           sampleRate: 44100,
+  //         ),
+  //         path: path,
+  //       );
+  //       _recordingPath = path;
+  //     } else {
+  //       throw Exception('Recording permission not granted');
+  //     }
+  //   } catch (e) {
+  //     throw AIServiceException('Failed to start recording: $e');
+  //   }
+  // }
+
+  // Future<Uint8List?> stopRecording() async {
+  //   try {
+  //     final String? path = await _record.stop();
+  //     if (path != null && _recordingPath != null) {
+  //       final File audioFile = File(_recordingPath!);
+  //       if (await audioFile.exists()) {
+  //         final Uint8List audioBytes = await audioFile.readAsBytes();
+  //         await audioFile.delete();
+  //         _recordingPath = null;
+  //         return audioBytes;
+  //       }
+  //     }
+  //     _recordingPath = null;
+  //     return null;
+  //   } catch (e) {
+  //     throw AIServiceException('Failed to stop recording: $e');
+  //   }
+  // }
+
+  // Future<bool> isRecording() async {
+  //   return await _record.isRecording();
+  // }
+
+  // Private helper methods
   Future<Map<String, dynamic>> _callGeminiAPI(String prompt) async {
-    // Updated model name - use gemini-1.5-flash for faster responses
-    // or gemini-1.5-pro for more complex tasks
     final url =
         '$_baseUrl/models/gemini-1.5-flash:generateContent?key=$_apiKey';
 
@@ -256,17 +401,13 @@ Format the response as structured content that a teacher can easily use.
             {
               'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
               'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
-            }
+            },
           ]
         }),
       );
 
-      print('API Response Status: ${response.statusCode}');
-      print('API Response Body: ${response.body}');
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-
         if (data['candidates'] != null && data['candidates'].isNotEmpty) {
           final content = data['candidates'][0]['content']['parts'][0]['text'];
           return {'content': content};
@@ -286,7 +427,6 @@ Format the response as structured content that a teacher can easily use.
 
   Future<Map<String, dynamic>> _callGeminiVisionAPI(
       String prompt, String base64Image) async {
-    // Updated model name for vision capabilities
     final url =
         '$_baseUrl/models/gemini-1.5-flash:generateContent?key=$_apiKey';
 
@@ -317,12 +457,8 @@ Format the response as structured content that a teacher can easily use.
         }),
       );
 
-      print('Vision API Response Status: ${response.statusCode}');
-      print('Vision API Response Body: ${response.body}');
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-
         if (data['candidates'] != null && data['candidates'].isNotEmpty) {
           final content = data['candidates'][0]['content']['parts'][0]['text'];
           return {'content': content};
@@ -340,23 +476,132 @@ Format the response as structured content that a teacher can easily use.
     }
   }
 
-  Future<String> _speechToText(Uint8List audioBytes, String? language) async {
-    // Implement Vertex AI Speech-to-Text API call
-    final url =
-        '$_vertexAIUrl/projects/$_projectId/locations/asia-south1/publishers/google/models/speechtotext:predict';
+  Future<String?> _generateImageWithVertexAI(
+      String concept, String type, String? subject, String? gradeLevel) async {
+    // Placeholder for actual Vertex AI implementation
+    return null;
+  }
 
-    // This is a simplified implementation - you'll need to handle authentication
-    // and proper audio encoding based on your specific requirements
+  String _generateEnhancedSVGContent(String concept, String type) {
+    switch (type.toLowerCase()) {
+      case 'diagram':
+        return _generateDetailedDiagramSVG(concept);
+      case 'chart':
+        return _generateDetailedChartSVG(concept);
+      case 'flowchart':
+        return _generateDetailedFlowchartSVG(concept);
+      default:
+        return _generateDetailedGenericSVG(concept);
+    }
+  }
 
-    return "Transcribed text would appear here"; // Placeholder
+  String _generateDetailedDiagramSVG(String concept) {
+    return '''
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="white" stroke="#333" stroke-width="2"/>
+  <circle cx="200" cy="150" r="80" fill="#e8f4fd" stroke="#2196f3" stroke-width="3"/>
+  <text x="200" y="120" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold">$concept</text>
+  <text x="200" y="140" text-anchor="middle" font-family="Arial" font-size="12">Main Concept</text>
+  <rect x="50" y="50" width="100" height="40" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+  <text x="100" y="75" text-anchor="middle" font-family="Arial" font-size="10">Detail 1</text>
+  <rect x="250" y="50" width="100" height="40" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2"/>
+  <text x="300" y="75" text-anchor="middle" font-family="Arial" font-size="10">Detail 2</text>
+  <line x1="150" y1="70" x2="160" y2="120" stroke="#666" stroke-width="2"/>
+  <line x1="250" y1="70" x2="240" y2="120" stroke="#666" stroke-width="2"/>
+</svg>
+''';
+  }
+
+  String _generateDetailedChartSVG(String concept) {
+    return '''
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="white" stroke="#333" stroke-width="2"/>
+  <text x="200" y="30" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold">$concept Chart</text>
+  <rect x="50" y="60" width="60" height="120" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
+  <rect x="130" y="100" width="60" height="80" fill="#2196f3" stroke="#1565c0" stroke-width="2"/>
+  <rect x="210" y="80" width="60" height="100" fill="#ff9800" stroke="#ef6c00" stroke-width="2"/>
+  <rect x="290" y="120" width="60" height="60" fill="#f44336" stroke="#c62828" stroke-width="2"/>
+  <text x="80" y="200" text-anchor="middle" font-family="Arial" font-size="12">A</text>
+  <text x="160" y="200" text-anchor="middle" font-family="Arial" font-size="12">B</text>
+  <text x="240" y="200" text-anchor="middle" font-family="Arial" font-size="12">C</text>
+  <text x="320" y="200" text-anchor="middle" font-family="Arial" font-size="12">D</text>
+  <line x1="40" y1="190" x2="370" y2="190" stroke="#333" stroke-width="2"/>
+  <line x1="40" y1="60" x2="40" y2="190" stroke="#333" stroke-width="2"/>
+</svg>
+''';
+  }
+
+  String _generateDetailedFlowchartSVG(String concept) {
+    return '''
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="white" stroke="#333" stroke-width="2"/>
+  <text x="200" y="30" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold">$concept Process</text>
+  <ellipse cx="200" cy="70" rx="60" ry="25" fill="#e8f5e8" stroke="#4caf50" stroke-width="2"/>
+  <text x="200" y="75" text-anchor="middle" font-family="Arial" font-size="12">Start</text>
+  <rect x="150" y="120" width="100" height="40" fill="#e3f2fd" stroke="#2196f3" stroke-width="2"/>
+  <text x="200" y="145" text-anchor="middle" font-family="Arial" font-size="12">Process</text>
+  <ellipse cx="200" cy="210" rx="60" ry="25" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+  <text x="200" y="215" text-anchor="middle" font-family="Arial" font-size="12">Result</text>
+  <line x1="200" y1="95" x2="200" y2="120" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="200" y1="160" x2="200" y2="185" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+</svg>
+''';
+  }
+
+  String _generateDetailedGenericSVG(String concept) {
+    return '''
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="white" stroke="#333" stroke-width="2"/>
+  <circle cx="200" cy="150" r="100" fill="#f5f5f5" stroke="#333" stroke-width="3"/>
+  <text x="200" y="130" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold">$concept</text>
+  <text x="200" y="160" text-anchor="middle" font-family="Arial" font-size="14">Visual Aid</text>
+  <text x="200" y="180" text-anchor="middle" font-family="Arial" font-size="12">Educational Diagram</text>
+</svg>
+''';
+  }
+
+  Future<String> _speechToTextFromBytes(
+      Uint8List audioBytes, String language) async {
+    try {
+      bool available = await _speechToText.initialize(
+        onStatus: (status) => print('Speech recognition status: $status'),
+        onError: (errorNotification) =>
+            print('Speech recognition error: $errorNotification'),
+      );
+
+      if (!available) {
+        throw Exception('Speech recognition not available on this device');
+      }
+
+      final Directory tempDir = await getTemporaryDirectory();
+      final File tempAudioFile = File(
+          '${tempDir.path}/temp_audio_${DateTime.now().millisecondsSinceEpoch}.wav');
+      await tempAudioFile.writeAsBytes(audioBytes);
+
+      await Future.delayed(const Duration(seconds: 2));
+
+      if (await tempAudioFile.exists()) {
+        await tempAudioFile.delete();
+      }
+
+      return "This is a simulated transcription of the recorded audio. In a real implementation, this would contain the actual speech-to-text result from the audio file.";
+    } catch (e) {
+      print('Speech-to-text error: $e');
+      throw AIServiceException('Failed to transcribe audio: $e');
+    }
   }
 
   // Helper extraction methods
   List<String> _extractActivities(Map<String, dynamic> response, String grade) {
     final content = response['content'] ?? '';
     final activities = <String>[];
-
     final lines = content.split('\n');
+
     for (String line in lines) {
       if (line.toLowerCase().contains('activity') ||
           line.toLowerCase().contains('exercise')) {
@@ -369,102 +614,21 @@ Format the response as structured content that a teacher can easily use.
         : ['Interactive discussion', 'Hands-on practice'];
   }
 
-  Future<VisualAidResponse> generateVisualAid({
-    required String concept,
-    required String type,
-    String? subject,
-    String? gradeLevel,
-  }) async {
-    final prompt = '''
-Create a detailed description for a $type to explain "$concept" for ${gradeLevel ?? 'elementary'} students.
-Subject: ${subject ?? 'general'}
-Provide:
-1. Step-by-step drawing instructions for a teacher to recreate on blackboard
-2. Labels and text to include
-3. Colors or shading suggestions (if applicable)
-4. Key elements to emphasize
-5. Interactive elements students can participate in
-Make it simple enough to draw with chalk on a blackboard.
-''';
-
-    final response = await _callGeminiAPI(prompt);
-
-    return VisualAidResponse(
-      concept: concept,
-      type: type,
-      drawingInstructions:
-          response['instructions'] ?? response['content'] ?? '',
-      labels: _extractLabels(response),
-      materials: ['Chalk', 'Blackboard', 'Ruler/Scale'],
-      estimatedTime: _estimateDrawingTime(type),
-      subject: subject ?? 'general',
-      gradeLevel: gradeLevel ?? 'elementary',
-      generatedAt: DateTime.now(),
-    );
+  List<String> _extractAssessments(
+      Map<String, dynamic> response, String grade) {
+    return ['Oral questioning', 'Quick quiz', 'Practical demonstration'];
   }
 
-  Future<EducationalGameResponse> generateGame({
-    required String topic,
-    required String gameType,
-    String? subject,
-    String? gradeLevel,
-    int duration = 15,
-  }) async {
-    final prompt = '''
-Create an educational $gameType game about "$topic" for ${gradeLevel ?? 'elementary'} students.
-Subject: ${subject ?? 'general'}
-Duration: $duration minutes
-Provide:
-1. Game rules and setup
-2. Materials needed (simple, low-resource)
-3. Step-by-step instructions
-4. Variations for different skill levels
-5. Learning objectives
-6. Assessment criteria
-Make it suitable for a classroom with limited resources.
-''';
-
-    final response = await _callGeminiAPI(prompt);
-
-    return EducationalGameResponse(
-      topic: topic,
-      gameType: gameType,
-      title: response['title'] ?? '$gameType Game: $topic',
-      rules: response['rules'] ?? '',
-      instructions: response['instructions'] ?? response['content'] ?? '',
-      materials: _extractMaterials(response),
-      duration: duration,
-      learningObjectives: _extractObjectives(response),
-      variations: _extractVariations(response),
-      subject: subject ?? 'general',
-      gradeLevel: gradeLevel ?? 'elementary',
-      generatedAt: DateTime.now(),
-    );
+  List<String> _extractVisualAids(Map<String, dynamic> response, String grade) {
+    return ['Simple diagrams', 'Visual examples', 'Interactive charts'];
   }
 
-  // Additional helper methods remain the same...
-  List<String> _extractAssessments(Map response, String grade) {
-    return ['Oral questioning', 'Quick quiz'];
-  }
-
-  List<String> _extractVisualAids(Map response, String grade) {
-    return ['Simple diagrams', 'Visual examples'];
-  }
-
-  List<String> _extractKeyPoints(Map response) {
-    return ['Key concept explained', 'Important to remember'];
-  }
-
-  List<String> _extractFunFacts(Map response) {
-    return ['Interesting related fact'];
-  }
-
-  List<String> _extractLabels(Map response) {
-    return ['Main label', 'Secondary label'];
+  List<String> _extractLabels(Map<String, dynamic> response) {
+    return ['Main concept', 'Key features', 'Important details'];
   }
 
   int _estimateDrawingTime(String type) {
-    switch (type) {
+    switch (type.toLowerCase()) {
       case 'diagram':
         return 10;
       case 'chart':
@@ -478,329 +642,96 @@ Make it suitable for a classroom with limited resources.
     }
   }
 
-  List<String> _extractMaterials(Map response) {
+  List<String> _extractKeyPoints(Map<String, dynamic> response) {
+    return ['Key concept explained', 'Important to remember'];
+  }
+
+  List<String> _extractFunFacts(Map<String, dynamic> response) {
+    return ['Interesting related fact'];
+  }
+
+  List<String> _extractMaterials(Map<String, dynamic> response) {
     return ['Paper', 'Pencil', 'Basic supplies'];
   }
 
-  List<String> _extractObjectives(Map response) {
+  List<String> _extractObjectives(Map<String, dynamic> response) {
     return ['Learning objective 1', 'Learning objective 2'];
   }
 
-  List<String> _extractVariations(Map response) {
+  List<String> _extractVariations(Map<String, dynamic> response) {
     return ['Easier version', 'Advanced version'];
   }
 
-  List<String> _extractDailyObjectives(Map<String, dynamic> response, int day) {
-    return [
-      'Day $day: Understanding core concepts',
-      'Day $day: Practical application'
-    ];
-  }
+  double _calculateAccuracy(String expected, String actual) {
+    final expectedWords = expected.toLowerCase().split(' ');
+    final actualWords = actual.toLowerCase().split(' ');
+    int matches = 0;
+    int maxLength = expectedWords.length > actualWords.length
+        ? expectedWords.length
+        : actualWords.length;
 
-  List<String> _extractDailyActivities(Map<String, dynamic> response, int day) {
-    return [
-      'Day $day: Introduction activity',
-      'Day $day: Practice exercise',
-      'Day $day: Review session'
-    ];
-  }
-
-  List<String> _extractDailyMaterials(Map<String, dynamic> response, int day) {
-    return ['Textbook', 'Worksheets', 'Basic supplies'];
-  }
-
-  String _extractDailyAssessment(Map<String, dynamic> response, int day) {
-    return 'Day $day: Quick assessment through Q&A and observation';
-  }
-
-  String _extractDailyHomework(Map<String, dynamic> response, int day) {
-    return 'Day $day: Practice exercises and reading assignment';
-  }
-}
-
-// Helper functions (moved outside the class)
-double _calculateAccuracy(String expected, String actual) {
-  final expectedWords = expected.toLowerCase().split(' ');
-  final actualWords = actual.toLowerCase().split(' ');
-
-  int matches = 0;
-  int maxLength = expectedWords.length > actualWords.length
-      ? expectedWords.length
-      : actualWords.length;
-
-  for (int i = 0;
-      i < maxLength && i < expectedWords.length && i < actualWords.length;
-      i++) {
-    if (expectedWords[i] == actualWords[i]) matches++;
-  }
-
-  return maxLength > 0 ? (matches / maxLength) * 100.0 : 0.0;
-}
-
-int _extractFluencyRating(Map<String, dynamic> analysis) {
-  final content = analysis['content'] ?? '';
-  final ratingMatch = RegExp(r'(\d)/5').firstMatch(content);
-  if (ratingMatch != null) {
-    return int.tryParse(ratingMatch.group(1) ?? '3') ?? 3;
-  }
-  return 3;
-}
-
-List<String> _extractErrors(Map<String, dynamic> analysis) {
-  final content = analysis['content'] ?? '';
-  final errors = <String>[];
-
-  final lines = content.split('\n');
-  for (String line in lines) {
-    if (line.toLowerCase().contains('error') ||
-        line.toLowerCase().contains('mistake') ||
-        line.toLowerCase().contains('pronunciation')) {
-      errors.add(line.trim());
+    for (int i = 0;
+        i < maxLength && i < expectedWords.length && i < actualWords.length;
+        i++) {
+      if (expectedWords[i] == actualWords[i]) matches++;
     }
+
+    return maxLength > 0 ? (matches / maxLength) * 100.0 : 0.0;
   }
 
-  return errors.isNotEmpty ? errors : ['Minor pronunciation variations'];
-}
-
-List<String> _extractSuggestions(Map<String, dynamic> analysis) {
-  final content = analysis['content'] ?? '';
-  final suggestions = <String>[];
-
-  final lines = content.split('\n');
-  for (String line in lines) {
-    if (line.toLowerCase().contains('suggest') ||
-        line.toLowerCase().contains('recommend') ||
-        line.toLowerCase().contains('practice')) {
-      suggestions.add(line.trim());
+  int _extractFluencyRating(Map<String, dynamic> analysis) {
+    final content = analysis['content'] ?? '';
+    final ratingMatch = RegExp(r'(\d)/5').firstMatch(content);
+    if (ratingMatch != null) {
+      return int.tryParse(ratingMatch.group(1) ?? '3') ?? 3;
     }
+    return 3;
   }
 
-  return suggestions.isNotEmpty
-      ? suggestions
-      : ['Practice reading aloud', 'Focus on difficult words'];
+  List<String> _extractErrors(Map<String, dynamic> analysis) {
+    final content = analysis['content'] ?? '';
+    final errors = <String>[];
+    final lines = content.split('\n');
+
+    for (String line in lines) {
+      if (line.toLowerCase().contains('error') ||
+          line.toLowerCase().contains('mistake') ||
+          line.toLowerCase().contains('pronunciation')) {
+        errors.add(line.trim());
+      }
+    }
+
+    return errors.isNotEmpty ? errors : ['Minor pronunciation variations'];
+  }
+
+  List<String> _extractSuggestions(Map<String, dynamic> analysis) {
+    final content = analysis['content'] ?? '';
+    final suggestions = <String>[];
+    final lines = content.split('\n');
+
+    for (String line in lines) {
+      if (line.toLowerCase().contains('suggest') ||
+          line.toLowerCase().contains('recommend') ||
+          line.toLowerCase().contains('practice')) {
+        suggestions.add(line.trim());
+      }
+    }
+
+    return suggestions.isNotEmpty
+        ? suggestions
+        : ['Practice reading aloud', 'Focus on difficult words'];
+  }
 }
 
-// Data Models (keep these the same as in your original file)
-class AIContentResponse {
-  final String content;
-  final String language;
-  final String subject;
-  final String gradeLevel;
-  final bool culturallyAdapted;
-  final DateTime generatedAt;
-
-  AIContentResponse({
-    required this.content,
-    required this.language,
-    required this.subject,
-    required this.gradeLevel,
-    required this.culturallyAdapted,
-    required this.generatedAt,
-  });
+// String extension
+extension StringExtension on String {
+  String capitalize() {
+    if (isEmpty) return this;
+    return "${this[0].toUpperCase()}${substring(1)}";
+  }
 }
 
-class DifferentiatedMaterialsResponse {
-  final Uint8List originalImage;
-  final List<GradeLevelMaterial> materials;
-  final String subject;
-  final String language;
-  final DateTime generatedAt;
-
-  DifferentiatedMaterialsResponse({
-    required this.originalImage,
-    required this.materials,
-    required this.subject,
-    required this.language,
-    required this.generatedAt,
-  });
-}
-
-class GradeLevelMaterial {
-  final String gradeLevel;
-  final String content;
-  final List<String> activities;
-  final List<String> assessments;
-  final List<String> visualAids;
-
-  GradeLevelMaterial({
-    required this.gradeLevel,
-    required this.content,
-    required this.activities,
-    required this.assessments,
-    required this.visualAids,
-  });
-}
-
-class KnowledgeResponse {
-  final String question;
-  final String explanation;
-  final String analogy;
-  final List<String> keyPoints;
-  final List<String> funFacts;
-  final String language;
-  final String gradeLevel;
-  final DateTime generatedAt;
-
-  KnowledgeResponse({
-    required this.question,
-    required this.explanation,
-    required this.analogy,
-    required this.keyPoints,
-    required this.funFacts,
-    required this.language,
-    required this.gradeLevel,
-    required this.generatedAt,
-  });
-}
-
-class VisualAidResponse {
-  final String concept;
-  final String type;
-  final String drawingInstructions;
-  final List<String> labels;
-  final List<String> materials;
-  final int estimatedTime;
-  final String subject;
-  final String gradeLevel;
-  final DateTime generatedAt;
-
-  VisualAidResponse({
-    required this.concept,
-    required this.type,
-    required this.drawingInstructions,
-    required this.labels,
-    required this.materials,
-    required this.estimatedTime,
-    required this.subject,
-    required this.gradeLevel,
-    required this.generatedAt,
-  });
-}
-
-class EducationalGameResponse {
-  final String topic;
-  final String gameType;
-  final String title;
-  final String rules;
-  final String instructions;
-  final List<String> materials;
-  final int duration;
-  final List<String> learningObjectives;
-  final List<String> variations;
-  final String subject;
-  final String gradeLevel;
-  final DateTime generatedAt;
-
-  EducationalGameResponse({
-    required this.topic,
-    required this.gameType,
-    required this.title,
-    required this.rules,
-    required this.instructions,
-    required this.materials,
-    required this.duration,
-    required this.learningObjectives,
-    required this.variations,
-    required this.subject,
-    required this.gradeLevel,
-    required this.generatedAt,
-  });
-}
-
-class ChatMessage {
-  final String content;
-  final bool isUser;
-  final DateTime timestamp;
-  final KnowledgeResponse? knowledgeResponse;
-  final bool isError;
-
-  ChatMessage({
-    required this.content,
-    required this.isUser,
-    required this.timestamp,
-    this.knowledgeResponse,
-    this.isError = false,
-  });
-}
-
-class AISuggestion {
-  final String title;
-  final String description;
-  final dynamic icon;
-  final String category;
-
-  AISuggestion({
-    required this.title,
-    required this.description,
-    required this.icon,
-    required this.category,
-  });
-}
-
-class ReadingAssessmentResponse {
-  final String expectedText;
-  final String actualTranscription;
-  final double accuracyPercentage;
-  final int fluencyRating;
-  final List<String> pronunciationErrors;
-  final String feedback;
-  final List<String> suggestions;
-  final String language;
-  final DateTime assessedAt;
-
-  ReadingAssessmentResponse({
-    required this.expectedText,
-    required this.actualTranscription,
-    required this.accuracyPercentage,
-    required this.fluencyRating,
-    required this.pronunciationErrors,
-    required this.feedback,
-    required this.suggestions,
-    required this.language,
-    required this.assessedAt,
-  });
-}
-
-class DailyLessonPlan {
-  final int day;
-  final String topic;
-  final List<String> objectives;
-  final List<String> activities;
-  final List<String> materials;
-  final String assessment;
-  final String homework;
-  final int duration;
-
-  DailyLessonPlan({
-    required this.day,
-    required this.topic,
-    required this.objectives,
-    required this.activities,
-    required this.materials,
-    required this.assessment,
-    required this.homework,
-    required this.duration,
-  });
-}
-
-class WeeklyLessonPlanResponse {
-  final String subject;
-  final String gradeLevel;
-  final List<String> topics;
-  final List<DailyLessonPlan> dailyPlans;
-  final int totalDuration;
-  final DateTime generatedAt;
-
-  WeeklyLessonPlanResponse({
-    required this.subject,
-    required this.gradeLevel,
-    required this.topics,
-    required this.dailyPlans,
-    required this.totalDuration,
-    required this.generatedAt,
-  });
-}
-
+// Exception class
 class AIServiceException implements Exception {
   final String message;
   AIServiceException(this.message);

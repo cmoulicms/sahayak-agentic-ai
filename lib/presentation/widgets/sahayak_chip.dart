@@ -29,7 +29,7 @@ class SahayakChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? effectiveColor.withOpacity(0.1)
-              : theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+              : theme.colorScheme.surfaceVariant.withOpacity(0.3),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected

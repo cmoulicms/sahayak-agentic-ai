@@ -4,6 +4,7 @@ import 'package:myapp/presentation/screens/ai_assistant/ai_assistant_screen.dart
 import 'package:myapp/presentation/screens/lessonPlans/lessonPlans_screen.dart';
 import 'package:myapp/presentation/screens/morningPreparation/morningPrep_screen.dart';
 import 'package:provider/provider.dart';
+
 import '../../providers/auth_provider.dart';
 import '../../widgets/theme_switcher.dart';
 
@@ -154,7 +155,7 @@ class DashboardHome extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
 
-                SizedBox(
+                Container(
                   width: double.infinity,
                   child: Card(
                     elevation: 4,

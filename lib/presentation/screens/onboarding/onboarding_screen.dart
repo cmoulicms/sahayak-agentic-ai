@@ -15,12 +15,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int _currentPage = 0;
 
   // Form data
-  final List<String> _selectedClasses = [];
-  final List<String> _selectedSubjects = [];
+  List<String> _selectedClasses = [];
+  List<String> _selectedSubjects = [];
   String _selectedSyllabus = '';
   String _selectedMedium = '';
   String _schoolContext = '';
-  final Map<String, int> _stressProfile = {};
+  Map<String, int> _stressProfile = {};
 
   final List<String> _availableClasses = [
     'Class 1',

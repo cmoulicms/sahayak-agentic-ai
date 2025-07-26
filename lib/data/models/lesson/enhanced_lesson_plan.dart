@@ -1,4 +1,5 @@
 // models/enhanced_lesson_plan.dart
+
 class EnhancedLessonPlan {
   final String id;
   final String teacherId;
@@ -42,28 +43,38 @@ class EnhancedLessonPlan {
 
   factory EnhancedLessonPlan.fromMap(Map<String, dynamic> map) {
     return EnhancedLessonPlan(
-      id: map['id'],
-      teacherId: map['teacherId'],
-      subject: map['subject'],
-      chapter: map['chapter'],
-      topic: map['topic'],
-      gradeLevel: map['gradeLevel'],
-      estimatedDuration: map['estimatedDuration'],
+      id: map['id'] ?? '',
+      teacherId: map['teacherId'] ?? '',
+      subject: map['subject'] ?? '',
+      chapter: map['chapter'] ?? '',
+      topic: map['topic'] ?? '',
+      gradeLevel: map['gradeLevel'] ?? '',
+      estimatedDuration: map['estimatedDuration'] ?? 0,
       objectives: List<LearningObjective>.from(
           map['objectives']?.map((x) => LearningObjective.fromMap(x)) ?? []),
       activities: List<LessonActivity>.from(
           map['activities']?.map((x) => LessonActivity.fromMap(x)) ?? []),
       resources: List<TeachingResource>.from(
           map['resources']?.map((x) => TeachingResource.fromMap(x)) ?? []),
-      assessment: AssessmentPlan.fromMap(map['assessment']),
-      differentiation: DifferentiationStrategy.fromMap(map['differentiation']),
-      keywords: List<String>.from(map['keywords']),
-      aiSuggestions: Map<String, dynamic>.from(map['aiSuggestions']),
-      status: LessonStatus.values.byName(map['status']),
-      createdAt: DateTime.parse(map['createdAt']),
-      scheduledFor: DateTime.parse(map['scheduledFor']),
+      assessment: AssessmentPlan.fromMap(map['assessment'] ?? {}),
+      differentiation:
+          DifferentiationStrategy.fromMap(map['differentiation'] ?? {}),
+      keywords: List<String>.from(map['keywords'] ?? []),
+      aiSuggestions: Map<String, dynamic>.from(map['aiSuggestions'] ?? {}),
+      status: LessonStatus.values.firstWhere(
+        (e) => e.name == map['status'],
+        orElse: () => LessonStatus.draft,
+      ),
+      createdAt: map['createdAt'] is String
+          ? DateTime.parse(map['createdAt'])
+          : map['createdAt'] ?? DateTime.now(),
+      scheduledFor: map['scheduledFor'] is String
+          ? DateTime.parse(map['scheduledFor'])
+          : map['scheduledFor'] ?? DateTime.now(),
       lastModified: map['lastModified'] != null
-          ? DateTime.parse(map['lastModified'])
+          ? (map['lastModified'] is String
+              ? DateTime.parse(map['lastModified'])
+              : map['lastModified'])
           : null,
     );
   }
@@ -91,8 +102,50 @@ class EnhancedLessonPlan {
     };
   }
 
-  copyWith({required String id, required String lastModified}) {}
+  EnhancedLessonPlan copyWith({
+    String? id,
+    String? teacherId,
+    String? subject,
+    String? chapter,
+    String? topic,
+    String? gradeLevel,
+    int? estimatedDuration,
+    List<LearningObjective>? objectives,
+    List<LessonActivity>? activities,
+    List<TeachingResource>? resources,
+    AssessmentPlan? assessment,
+    DifferentiationStrategy? differentiation,
+    List<String>? keywords,
+    Map<String, dynamic>? aiSuggestions,
+    LessonStatus? status,
+    DateTime? createdAt,
+    DateTime? scheduledFor,
+    DateTime? lastModified,
+  }) {
+    return EnhancedLessonPlan(
+      id: id ?? this.id,
+      teacherId: teacherId ?? this.teacherId,
+      subject: subject ?? this.subject,
+      chapter: chapter ?? this.chapter,
+      topic: topic ?? this.topic,
+      gradeLevel: gradeLevel ?? this.gradeLevel,
+      estimatedDuration: estimatedDuration ?? this.estimatedDuration,
+      objectives: objectives ?? this.objectives,
+      activities: activities ?? this.activities,
+      resources: resources ?? this.resources,
+      assessment: assessment ?? this.assessment,
+      differentiation: differentiation ?? this.differentiation,
+      keywords: keywords ?? this.keywords,
+      aiSuggestions: aiSuggestions ?? this.aiSuggestions,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+      scheduledFor: scheduledFor ?? this.scheduledFor,
+      lastModified: lastModified ?? this.lastModified,
+    );
+  }
 }
+
+// Keep all other classes (LearningObjective, LessonActivity, etc.) with proper copyWith methods
 
 class LearningObjective {
   final String id;
@@ -109,10 +162,10 @@ class LearningObjective {
 
   factory LearningObjective.fromMap(Map<String, dynamic> map) {
     return LearningObjective(
-      id: map['id'],
-      description: map['description'],
-      bloomsLevel: map['bloomsLevel'],
-      isCompleted: map['isCompleted'],
+      id: map['id'] ?? '',
+      description: map['description'] ?? '',
+      bloomsLevel: map['bloomsLevel'] ?? '',
+      isCompleted: map['isCompleted'] ?? false,
     );
   }
 
@@ -123,6 +176,20 @@ class LearningObjective {
       'bloomsLevel': bloomsLevel,
       'isCompleted': isCompleted,
     };
+  }
+
+  LearningObjective copyWith({
+    String? id,
+    String? description,
+    String? bloomsLevel,
+    bool? isCompleted,
+  }) {
+    return LearningObjective(
+      id: id ?? this.id,
+      description: description ?? this.description,
+      bloomsLevel: bloomsLevel ?? this.bloomsLevel,
+      isCompleted: isCompleted ?? this.isCompleted,
+    );
   }
 }
 
@@ -149,14 +216,14 @@ class LessonActivity {
 
   factory LessonActivity.fromMap(Map<String, dynamic> map) {
     return LessonActivity(
-      id: map['id'],
-      title: map['title'],
-      description: map['description'],
-      duration: map['duration'],
-      activityType: map['activityType'],
-      materials: List<String>.from(map['materials']),
-      instructions: map['instructions'],
-      aiGenerated: Map<String, dynamic>.from(map['aiGenerated']),
+      id: map['id'] ?? '',
+      title: map['title'] ?? '',
+      description: map['description'] ?? '',
+      duration: map['duration'] ?? 0,
+      activityType: map['activityType'] ?? '',
+      materials: List<String>.from(map['materials'] ?? []),
+      instructions: map['instructions'] ?? '',
+      aiGenerated: Map<String, dynamic>.from(map['aiGenerated'] ?? {}),
     );
   }
 
@@ -193,12 +260,12 @@ class TeachingResource {
 
   factory TeachingResource.fromMap(Map<String, dynamic> map) {
     return TeachingResource(
-      id: map['id'],
-      name: map['name'],
-      type: map['type'],
-      url: map['url'],
-      description: map['description'],
-      isRequired: map['isRequired'],
+      id: map['id'] ?? '',
+      name: map['name'] ?? '',
+      type: map['type'] ?? '',
+      url: map['url'] ?? '',
+      description: map['description'] ?? '',
+      isRequired: map['isRequired'] ?? false,
     );
   }
 
@@ -229,10 +296,10 @@ class AssessmentPlan {
 
   factory AssessmentPlan.fromMap(Map<String, dynamic> map) {
     return AssessmentPlan(
-      formativeType: map['formativeType'],
-      summativeType: map['summativeType'],
-      rubrics: List<String>.from(map['rubrics']),
-      aiQuestions: Map<String, dynamic>.from(map['aiQuestions']),
+      formativeType: map['formativeType'] ?? '',
+      summativeType: map['summativeType'] ?? '',
+      rubrics: List<String>.from(map['rubrics'] ?? []),
+      aiQuestions: Map<String, dynamic>.from(map['aiQuestions'] ?? {}),
     );
   }
 
@@ -247,8 +314,8 @@ class AssessmentPlan {
 }
 
 class DifferentiationStrategy {
-  final Map<String, String> learningStyles;
-  final Map<String, String> abilityLevels;
+  final Map<String, dynamic> learningStyles;
+  final Map<String, dynamic> abilityLevels;
   final List<String> accommodations;
 
   DifferentiationStrategy({
@@ -259,9 +326,9 @@ class DifferentiationStrategy {
 
   factory DifferentiationStrategy.fromMap(Map<String, dynamic> map) {
     return DifferentiationStrategy(
-      learningStyles: Map<String, String>.from(map['learningStyles']),
-      abilityLevels: Map<String, String>.from(map['abilityLevels']),
-      accommodations: List<String>.from(map['accommodations']),
+      learningStyles: Map<String, dynamic>.from(map['learningStyles'] ?? {}),
+      abilityLevels: Map<String, dynamic>.from(map['abilityLevels'] ?? {}),
+      accommodations: List<String>.from(map['accommodations'] ?? []),
     );
   }
 
@@ -275,3 +342,5 @@ class DifferentiationStrategy {
 }
 
 enum LessonStatus { draft, inProgress, completed, needsRevision, approved }
+
+// Morning Prep Data Models (Add to lesson_provider.dart or separate file)

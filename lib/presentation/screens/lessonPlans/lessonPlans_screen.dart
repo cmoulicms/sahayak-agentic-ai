@@ -1,9 +1,12 @@
 // screens/lesson_planning/lesson_planning_screen.dart
 import 'package:flutter/material.dart';
 import 'package:myapp/data/models/lesson/enhanced_lesson_plan.dart';
-import 'package:myapp/presentation/widgets/sahayakCard.dart';
+import 'package:myapp/presentation/widgets/shayakCard.dart';
 // import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+
+
 import '../../providers/lesson_provider.dart';
 import '../../widgets/error_widget.dart';
 import '../../widgets/loading_widget.dart';
@@ -20,7 +23,7 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
   String _selectedSubject = 'All';
-  final LessonStatus _selectedStatus = LessonStatus.draft;
+  LessonStatus _selectedStatus = LessonStatus.draft;
 
   @override
   void initState() {
@@ -267,7 +270,7 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
             ),
             filled: true,
             fillColor:
-                Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
           ),
         ),
       ],
@@ -398,7 +401,7 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
       selected: isSelected,
       onSelected: (_) => onTap(),
       backgroundColor:
-          Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+          Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
       selectedColor: Theme.of(context).colorScheme.primaryContainer,
     );
   }
@@ -785,7 +788,7 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(

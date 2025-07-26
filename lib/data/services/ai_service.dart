@@ -1,9 +1,11 @@
 // services/ai_service.dart
 import 'dart:convert';
 import 'dart:math';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/data/models/lesson/enhanced_lesson_plan.dart';
-import 'package:myapp/presentation/providers/lesson_provider.dart';
+import 'package:myapp/data/models/morningPrep/morningPrep_model.dart';
+
 
 class AIService {
   static const String _baseUrl =
@@ -65,9 +67,11 @@ class AIService {
     required String teacherId,
     required String date,
     required List<EnhancedLessonPlan> todayLessons,
+    required List<EnhancedLessonPlan> response,
   }) async {
     if (_isDemoMode) {
-      return _generateDemoMorningPrep(teacherId, date, todayLessons);
+      return _generateDemoMorningPrep(
+          teacherId, date, todayLessons as String, response);
     }
 
     try {
@@ -305,7 +309,23 @@ Focus on practical, actionable tasks that will help the teacher have a successfu
       return MorningPrepData(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         teacherId: teacherId,
-        date: date,
+        date: DateTime.now(),
+        todaysSchedule: {
+          'lessons': jsonData['todaysLessons'] ?? [],
+          'notes': jsonData['notes'] ?? '',
+        },
+        quickReminders: List<String>.from(jsonData['quickReminders'] ?? []),
+        priorityTasks: List<String>.from(jsonData['priorityTasks'] ?? []),
+        wellnessCheck: Map<String, String>.from(
+          jsonData['wellnessCheck'] ?? {},
+        ),
+        aiTips: (jsonData['aiTips'] as List? ?? [])
+            .map((tip) => PrepTip.fromMap(tip))
+            .toList(),
+        isCompleted: jsonData['isCompleted'] ?? false,
+        duration: jsonData['duration'] ?? 0,
+
+        // aiTips: List<String>.from(jsonData['aiTips'] ?? []),
         tasks: (jsonData['tasks'] as List? ?? [])
             .map((task) => MorningPrepTask(
                   id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -321,7 +341,7 @@ Focus on practical, actionable tasks that will help the teacher have a successfu
           temperature: jsonData['weather']?['temperature'] ?? 25,
           suggestion: jsonData['weather']?['suggestion'] ?? '',
         ),
-        quickTips: List<String>.from(jsonData['quickTips'] ?? []),
+
         moodCheckIn: MoodCheckIn(
           mood: jsonData['moodCheckIn']?['mood'] ?? 'focused',
           energyLevel: jsonData['moodCheckIn']?['energyLevel'] ?? 8,
@@ -523,10 +543,71 @@ Focus on practical, actionable tasks that will help the teacher have a successfu
   }
 
   MorningPrepData _generateDemoMorningPrep(
-      String teacherId, String date, List<EnhancedLessonPlan> todayLessons) {
+    String response,
+    String teacherId,
+    String date,
+    List<EnhancedLessonPlan> todayLessons,
+  ) {
     final random = Random();
     final moods = ['focused', 'excited', 'calm', 'energetic', 'ready'];
     final conditions = ['Sunny', 'Cloudy', 'Partly Cloudy', 'Clear'];
+    // final jsonData = jsonDecode(response);
+
+    Map<String, dynamic> jsonData;
+
+    try {
+      // Try to parse the response if it's valid JSON
+      jsonData = jsonDecode(response);
+    } catch (e) {
+      // If parsing fails, use demo data structure
+      jsonData = {
+        'todaysSchedule': {
+          'lessons': todayLessons
+              .map((lesson) => {
+                    'subject': lesson.subject,
+                    'topic': lesson.topic,
+                    'duration': lesson.estimatedDuration,
+                  })
+              .toList(),
+          'notes': 'Demo schedule for today',
+        },
+        'quickReminders': [
+          'Check classroom temperature',
+          'Review attendance sheets',
+          'Prepare backup activities',
+        ],
+        'priorityTasks': [
+          'Review lesson objectives',
+          'Set up technology',
+          'Prepare materials',
+        ],
+        'wellnessCheck': {
+          'mood': 'focused',
+          'energy': 'high',
+          'readiness': 'prepared',
+        },
+        'aiTips': [
+          {
+            'category': 'engagement',
+            'title': 'Student Engagement Tip',
+            'description': 'Use interactive elements to maintain attention',
+            'actionable': 'Start with a question or brief activity',
+            'priority': 1,
+            'isPersonalized': true,
+          },
+          {
+            'category': 'preparation',
+            'title': 'Material Preparation',
+            'description': 'Organize materials in advance',
+            'actionable': 'Set up stations before students arrive',
+            'priority': 2,
+            'isPersonalized': false,
+          },
+        ],
+        'isCompleted': false,
+        'duration': 0,
+      };
+    }
 
     final tasks = <MorningPrepTask>[
       MorningPrepTask(
@@ -584,7 +665,7 @@ Focus on practical, actionable tasks that will help the teacher have a successfu
     return MorningPrepData(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       teacherId: teacherId,
-      date: date,
+      date: DateTime.now(),
       tasks: tasks,
       weather: WeatherInfo(
         condition: conditions[random.nextInt(conditions.length)],
@@ -592,13 +673,24 @@ Focus on practical, actionable tasks that will help the teacher have a successfu
         suggestion:
             'Great weather for learning! Consider incorporating outdoor elements if possible.',
       ),
-      quickTips: [
-        'Start each class with a positive greeting to set the tone',
-        'Use the 2-minute rule: if a task takes less than 2 minutes, do it immediately',
-        'Keep a water bottle nearby to stay hydrated throughout the day',
-        'Take micro-breaks between classes to reset your energy',
-        'Celebrate small wins with your students to build momentum',
-      ],
+      todaysSchedule:
+          Map<String, dynamic>.from(jsonData['todaysSchedule'] ?? {}),
+      quickReminders: List<String>.from(jsonData['quickReminders'] ?? []),
+      priorityTasks: List<String>.from(jsonData['priorityTasks'] ?? []),
+      wellnessCheck: Map<String, String>.from(jsonData['priorityTasks'] ?? []),
+      aiTips: (jsonData['aiTips'] as List? ?? [])
+          .map((tip) => PrepTip(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                category: tip['category'] ?? '',
+                title: tip['title'] ?? '',
+                description: tip['description'] ?? '',
+                actionable: tip['actionable'] ?? '',
+                priority: tip['priority'] ?? 1,
+                isPersonalized: tip['isPersonalized'] ?? false,
+              ))
+          .toList(),
+      isCompleted: {}['isCompleted'] ?? false,
+      duration: {}['duration'] ?? 0,
       moodCheckIn: MoodCheckIn(
         mood: moods[random.nextInt(moods.length)],
         energyLevel: 7 + random.nextInt(3),
