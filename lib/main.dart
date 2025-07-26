@@ -53,6 +53,7 @@ class SahayakApp extends StatelessWidget {
             theme: AppThemes.lightTheme,
             darkTheme: AppThemes.darkTheme,
             themeMode: themeProvider.themeMode,
+            debugShowCheckedModeBanner: false,
             // Use AuthWrapper as home instead of specific screens
             home: const AuthWrapper(),
             routes: {

@@ -67,7 +67,9 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
             onSelected: _handleMenuAction,
             itemBuilder: (context) => [
               const PopupMenuItem(
-                  value: 'filter', child: Text('Filter Lessons')),
+                value: 'filter',
+                child: Text('Filter Lessons'),
+              ),
               const PopupMenuItem(value: 'export', child: Text('Export Plans')),
               const PopupMenuItem(value: 'templates', child: Text('Templates')),
             ],
@@ -98,9 +100,9 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
         children: [
           Text(
             'Create New Lesson Plan',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           _buildQuickCreateCards(),
@@ -117,9 +119,9 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
       children: [
         Text(
           'Quick Start',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
         Row(
@@ -173,8 +175,13 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
     );
   }
 
-  Widget _buildQuickCreateCard(String title, String subtitle, IconData icon,
-      Color color, VoidCallback onTap) {
+  Widget _buildQuickCreateCard(
+    String title,
+    String subtitle,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
     return SahayakCard(
       onTap: onTap,
       child: Padding(
@@ -193,18 +200,15 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
             const SizedBox(height: 12),
             Text(
               title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             Text(
               subtitle,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.7),
-                  ),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
             ),
           ],
         ),
@@ -221,9 +225,9 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
           children: [
             Text(
               'Manual Creation',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 16),
             _buildFormField('Subject', 'Select subject'),
@@ -257,20 +261,19 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
       children: [
         Text(
           label,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 6),
         TextFormField(
           decoration: InputDecoration(
             hintText: hint,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             filled: true,
-            fillColor:
-                Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+            fillColor: Theme.of(
+              context,
+            ).colorScheme.surfaceContainerHighest.withOpacity(0.3),
           ),
         ),
       ],
@@ -282,7 +285,8 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
       builder: (context, lessonProvider, child) {
         if (lessonProvider.isLoading) {
           return const Center(
-              child: LoadingWidget(message: 'Loading lesson plans...'));
+            child: LoadingWidget(message: 'Loading lesson plans...'),
+          );
         }
 
         if (lessonProvider.error != null) {
@@ -319,16 +323,28 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
           Row(
             children: [
               Expanded(
-                  child: _buildStatCard(
-                      'Total', stats['total'] ?? 0, Colors.blue)),
+                child: _buildStatCard(
+                  'Total',
+                  stats['total'] ?? 0,
+                  Colors.blue,
+                ),
+              ),
               const SizedBox(width: 8),
               Expanded(
-                  child: _buildStatCard(
-                      'Draft', stats['draft'] ?? 0, Colors.orange)),
+                child: _buildStatCard(
+                  'Draft',
+                  stats['draft'] ?? 0,
+                  Colors.orange,
+                ),
+              ),
               const SizedBox(width: 8),
               Expanded(
-                  child: _buildStatCard(
-                      'Complete', stats['completed'] ?? 0, Colors.green)),
+                child: _buildStatCard(
+                  'Complete',
+                  stats['completed'] ?? 0,
+                  Colors.green,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -343,9 +359,12 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
                 }),
                 const SizedBox(width: 8),
                 _buildFilterChip(
-                    'Mathematics', _selectedSubject == 'Mathematics', () {
-                  setState(() => _selectedSubject = 'Mathematics');
-                }),
+                  'Mathematics',
+                  _selectedSubject == 'Mathematics',
+                  () {
+                    setState(() => _selectedSubject = 'Mathematics');
+                  },
+                ),
                 const SizedBox(width: 8),
                 _buildFilterChip('Science', _selectedSubject == 'Science', () {
                   setState(() => _selectedSubject = 'Science');
@@ -356,9 +375,12 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
                 }),
                 const SizedBox(width: 8),
                 _buildFilterChip(
-                    'Social Studies', _selectedSubject == 'Social Studies', () {
-                  setState(() => _selectedSubject = 'Social Studies');
-                }),
+                  'Social Studies',
+                  _selectedSubject == 'Social Studies',
+                  () {
+                    setState(() => _selectedSubject = 'Social Studies');
+                  },
+                ),
               ],
             ),
           ),
@@ -380,15 +402,15 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
           Text(
             count.toString(),
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.bold,
-                ),
+              color: color,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Text(
             label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: color,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: color),
           ),
         ],
       ),
@@ -400,14 +422,17 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
       label: Text(label),
       selected: isSelected,
       onSelected: (_) => onTap(),
-      backgroundColor:
-          Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerHighest.withOpacity(0.3),
       selectedColor: Theme.of(context).colorScheme.primaryContainer,
     );
   }
 
   Widget _buildLessonsList(
-      List<EnhancedLessonPlan> lessons, LessonProvider lessonProvider) {
+    List<EnhancedLessonPlan> lessons,
+    LessonProvider lessonProvider,
+  ) {
     return RefreshIndicator(
       onRefresh: () => lessonProvider.loadLessonPlans(),
       child: ListView.builder(
@@ -422,7 +447,9 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
   }
 
   Widget _buildLessonCard(
-      EnhancedLessonPlan lesson, LessonProvider lessonProvider) {
+    EnhancedLessonPlan lesson,
+    LessonProvider lessonProvider,
+  ) {
     return SahayakCard(
       margin: const EdgeInsets.only(bottom: 12),
       onTap: () => _openLessonDetails(lesson),
@@ -439,20 +466,17 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
                     children: [
                       Text(
                         lesson.topic,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         '${lesson.subject} • Grade ${lesson.gradeLevel} • ${lesson.estimatedDuration}min',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withOpacity(0.7),
-                            ),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.7),
+                        ),
                       ),
                     ],
                   ),
@@ -506,11 +530,10 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
                 Text(
                   'Updated ${_getRelativeTime(lesson.lastModified ?? lesson.createdAt)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withOpacity(0.5),
-                      ),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.5),
+                  ),
                 ),
               ],
             ),
@@ -557,15 +580,19 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
       child: Text(
         label,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w600,
-            ),
+          color: color,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
 
   Widget _buildProgressIndicator(
-      String label, int completed, int total, Color color) {
+    String label,
+    int completed,
+    int total,
+    Color color,
+  ) {
     final progress = total > 0 ? completed / total : 0.0;
 
     return Column(
@@ -573,9 +600,9 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
       children: [
         Text(
           label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 2),
         Row(
@@ -601,10 +628,9 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
             const SizedBox(width: 4),
             Text(
               '$completed/$total',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: color,
-                    fontSize: 10,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: color, fontSize: 10),
             ),
           ],
         ),
@@ -620,17 +646,16 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
         children: [
           Text(
             'AI Teaching Assistant',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
             'Get intelligent suggestions and assistance for your lesson planning',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                ),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
           ),
           const SizedBox(height: 24),
           _buildAIFeatureCards(),
@@ -695,8 +720,13 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
     );
   }
 
-  Widget _buildAIFeatureCard(String title, String description, IconData icon,
-      Color color, VoidCallback onTap) {
+  Widget _buildAIFeatureCard(
+    String title,
+    String description,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
     return SahayakCard(
       onTap: onTap,
       child: Padding(
@@ -715,19 +745,16 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
             const SizedBox(height: 12),
             Text(
               title,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 4),
             Text(
               description,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.7),
-                  ),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
             ),
           ],
         ),
@@ -752,8 +779,8 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
                 Text(
                   'Recent AI Suggestions',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
@@ -783,12 +810,18 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
   }
 
   Widget _buildSuggestionItem(
-      String title, String description, IconData icon, String time) {
+    String title,
+    String description,
+    IconData icon,
+    String time,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        color: Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHighest.withOpacity(0.3),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -806,18 +839,14 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
+                Text(title, style: Theme.of(context).textTheme.titleSmall),
                 Text(
                   description,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withOpacity(0.7),
-                      ),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.7),
+                  ),
                 ),
               ],
             ),
@@ -825,9 +854,8 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
           Text(
             time,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                ),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            ),
           ),
         ],
       ),
@@ -848,17 +876,15 @@ class _LessonPlanningScreenState extends State<LessonPlanningScreen>
           Text(
             'No lesson plans yet',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                ),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             'Create your first lesson plan to get started',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                ),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            ),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
@@ -1031,8 +1057,8 @@ class _AIQuickCreateDialogState extends State<AIQuickCreateDialog> {
                   Text(
                     'AI Quick Create',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -1103,8 +1129,9 @@ class _AIQuickCreateDialogState extends State<AIQuickCreateDialog> {
                             ? const SizedBox(
                                 width: 16,
                                 height: 16,
-                                child:
-                                    CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               )
                             : const Icon(Icons.auto_awesome),
                         label: Text(
@@ -1125,7 +1152,9 @@ class _AIQuickCreateDialogState extends State<AIQuickCreateDialog> {
   }
 
   void _generateLesson(
-      BuildContext context, LessonProvider lessonProvider) async {
+    BuildContext context,
+    LessonProvider lessonProvider,
+  ) async {
     if (_formKey.currentState?.validate() == true) {
       final lessonPlan = await lessonProvider.generateLessonPlan(
         subject: _subjectController.text,
@@ -1139,7 +1168,8 @@ class _AIQuickCreateDialogState extends State<AIQuickCreateDialog> {
         if (lessonPlan != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-                content: Text('Lesson plan generated successfully!')),
+              content: Text('Lesson plan generated successfully!'),
+            ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

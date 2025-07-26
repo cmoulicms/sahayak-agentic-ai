@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myapp/data/models/teacher/teacher_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late SharedPreferences _prefs;
 
   User? _user;
   Teacher? _teacher;
@@ -91,7 +93,10 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<bool> signUpWithEmail(
-      String email, String password, String name) async {
+    String email,
+    String password,
+    String name,
+  ) async {
     try {
       _isLoading = true;
       notifyListeners();
@@ -129,9 +134,12 @@ class AuthProvider extends ChangeNotifier {
       stressProfile: {},
       createdAt: DateTime.now(),
       lastActiveAt: DateTime.now(),
+      isOnboarded: true
     );
 
     await _firestore.collection('teachers').doc(user.uid).set(teacher.toMap());
+    _prefs = await SharedPreferences.getInstance();
+      _prefs.setBool('isOnboarded', true);
     _teacher = teacher;
   }
 
@@ -156,7 +164,6 @@ class AuthProvider extends ChangeNotifier {
       print('Error signing out: $e');
     }
   }
-
 
   // Method to check if user setup is complete
   bool get isSetupComplete {

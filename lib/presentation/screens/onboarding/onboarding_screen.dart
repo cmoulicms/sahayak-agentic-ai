@@ -34,7 +34,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     'Class 9',
     'Class 10',
     'Class 11',
-    'Class 12'
+    'Class 12',
   ];
 
   final List<String> _availableSubjects = [
@@ -50,7 +50,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     'Geography',
     'Computer Science',
     'Art',
-    'Physical Education'
+    'Physical Education',
   ];
 
   final List<String> _syllabusTypes = [
@@ -59,14 +59,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     'State Board',
     'International Baccalaureate',
     'Cambridge',
-    'Other'
+    'Other',
   ];
 
   final List<String> _mediums = [
     'English',
     'Hindi',
     'Regional Language',
-    'Bilingual'
+    'Bilingual',
   ];
 
   final List<String> _schoolContexts = [
@@ -75,7 +75,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     'International School',
     'Rural School',
     'Urban School',
-    'Semi-Urban School'
+    'Semi-Urban School',
   ];
 
   @override
@@ -142,6 +142,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             child: PageView(
               controller: _pageController,
               onPageChanged: (page) => setState(() => _currentPage = page),
+              physics: NeverScrollableScrollPhysics(),
               children: [
                 _buildClassSelectionPage(),
                 _buildSubjectSelectionPage(),
@@ -211,9 +212,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(height: 8),
           Text(
             'Select all the classes you currently handle',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.grey.shade600,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
           ),
           const SizedBox(height: 24),
           Expanded(
@@ -263,9 +264,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(height: 8),
           Text(
             'This helps us personalize content for you',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.grey.shade600,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
           ),
           const SizedBox(height: 24),
           Expanded(
@@ -309,15 +310,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(height: 8),
           Text(
             'This helps us provide relevant content',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.grey.shade600,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
           ),
           const SizedBox(height: 24),
 
           // Syllabus Type
-          Text('Curriculum/Syllabus',
-              style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            'Curriculum/Syllabus',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -335,8 +338,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(height: 24),
 
           // Medium
-          Text('Medium of Instruction',
-              style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            'Medium of Instruction',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -395,9 +400,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(height: 8),
           Text(
             'Help us understand your challenges (1 = Low stress, 5 = High stress)',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.grey.shade600,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
           ),
           const SizedBox(height: 24),
           Expanded(
@@ -424,7 +429,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                             return GestureDetector(
                               onTap: () => setState(
-                                  () => _stressProfile[entry.key] = rating),
+                                () => _stressProfile[entry.key] = rating,
+                              ),
                               child: Container(
                                 width: 40,
                                 height: 40,
@@ -474,18 +480,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               color: Theme.of(context).primaryColor,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.check,
-              size: 50,
-              color: Colors.white,
-            ),
+            child: const Icon(Icons.check, size: 50, color: Colors.white),
           ),
           const SizedBox(height: 32),
           Text(
             'All Set! 🎉',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           Text(
@@ -494,14 +496,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
-          _buildFeaturePreview(Icons.wb_sunny, 'Morning Preparation',
-              'Start each day with a personalized 5-minute prep'),
-          _buildFeaturePreview(Icons.book, 'Smart Lesson Plans',
-              'AI-powered lesson planning tailored to your style'),
-          _buildFeaturePreview(Icons.class_, 'In-Class Support',
-              'Real-time assistance during teaching'),
-          _buildFeaturePreview(Icons.quiz, 'Assessment Tools',
-              'Quick quiz and worksheet generation'),
+          _buildFeaturePreview(
+            Icons.wb_sunny,
+            'Morning Preparation',
+            'Start each day with a personalized 5-minute prep',
+          ),
+          _buildFeaturePreview(
+            Icons.book,
+            'Smart Lesson Plans',
+            'AI-powered lesson planning tailored to your style',
+          ),
+          _buildFeaturePreview(
+            Icons.class_,
+            'In-Class Support',
+            'Real-time assistance during teaching',
+          ),
+          _buildFeaturePreview(
+            Icons.quiz,
+            'Assessment Tools',
+            'Quick quiz and worksheet generation',
+          ),
         ],
       ),
     );
@@ -528,14 +542,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Text(
                   title,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 Text(
                   description,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey.shade600,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade600),
                 ),
               ],
             ),
