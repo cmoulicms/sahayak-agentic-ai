@@ -45,7 +45,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.analytics),
+            icon: const Icon(Icons.notifications),
             onPressed: () => _showStressAnalytics(),
           ),
         ],
@@ -112,9 +112,9 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
                 const SizedBox(width: 12),
                 Text(
                   'Morning Stress Check-in',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -128,7 +128,8 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
 
             // Stress level sliders
             ..._currentStressLevels.entries.map(
-                (entry) => _buildStressLevelSlider(entry.key, entry.value)),
+              (entry) => _buildStressLevelSlider(entry.key, entry.value),
+            ),
 
             const SizedBox(height: 16),
 
@@ -168,7 +169,8 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
                 divisions: 4,
                 label: level.toString(),
                 onChanged: (value) => setState(
-                    () => _currentStressLevels[factor] = value.round()),
+                  () => _currentStressLevels[factor] = value.round(),
+                ),
               ),
             ),
             const Text('High'),
@@ -209,9 +211,9 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
                 const SizedBox(width: 8),
                 Text(
                   'Wellness Overview',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -287,9 +289,9 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
                 Text(
                   'Stress Alert & Interventions',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.orange,
-                      ),
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange,
+                  ),
                 ),
               ],
             ),
@@ -336,7 +338,9 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
   }
 
   Widget _buildEnhancedTasksCard(
-      LessonProvider lessonProvider, StressAnalysisProvider stressProvider) {
+    LessonProvider lessonProvider,
+    StressAnalysisProvider stressProvider,
+  ) {
     return SahayakCard(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -349,9 +353,9 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
                 const SizedBox(width: 8),
                 Text(
                   'Smart Morning Tasks',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -373,7 +377,8 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
   }
 
   Widget _buildPersonalizedRecommendations(
-      StressAnalysisProvider stressProvider) {
+    StressAnalysisProvider stressProvider,
+  ) {
     return SahayakCard(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -386,9 +391,9 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
                 const SizedBox(width: 8),
                 Text(
                   'Personalized Recommendations',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -401,7 +406,7 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
                   gradient: LinearGradient(
                     colors: [
                       Colors.purple.withOpacity(0.1),
-                      Colors.blue.withOpacity(0.1)
+                      Colors.blue.withOpacity(0.1),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(12),
@@ -412,8 +417,8 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
                     Text(
                       rec['title'],
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(rec['description']),
@@ -450,9 +455,9 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
           children: [
             Text(
               'Quick Stress Relief',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Row(
@@ -542,7 +547,8 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
   }
 
   List<String> _getStressInterventions(
-      List<MapEntry<String, int>> highStressAreas) {
+    List<MapEntry<String, int>> highStressAreas,
+  ) {
     final interventions = <String>[];
 
     for (final area in highStressAreas) {
@@ -551,8 +557,9 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
           interventions.add('Use AI lesson planner to reduce prep time by 60%');
           break;
         case 'resources':
-          interventions
-              .add('Access instant teaching materials from AI library');
+          interventions.add(
+            'Access instant teaching materials from AI library',
+          );
           break;
         case 'admin':
           interventions.add('Enable automated progress tracking');
@@ -577,14 +584,18 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
       overallWellness: _overallWellness,
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Stress check-in completed!')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Stress check-in completed!')));
   }
 
   // Implement other helper methods...
   Widget _buildMetricCard(
-      String label, String value, IconData icon, Color color) {
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -685,8 +696,8 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
                 Text(
                   task['title'],
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Text(task['description']),
                 const SizedBox(height: 4),
@@ -699,8 +710,9 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
                     const SizedBox(width: 8),
                     Chip(
                       label: Text(task['priority']),
-                      backgroundColor:
-                          _getPriorityColor(task['priority']).withOpacity(0.2),
+                      backgroundColor: _getPriorityColor(
+                        task['priority'],
+                      ).withOpacity(0.2),
                     ),
                   ],
                 ),
@@ -744,8 +756,12 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
   }
 
   Widget _buildQuickActionButton(
-      String title, IconData icon, Color color, VoidCallback onPressed) {
-    return Container(
+    String title,
+    IconData icon,
+    Color color,
+    VoidCallback onPressed,
+  ) {
+    return SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: onPressed,
@@ -769,9 +785,9 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
 
   void _startIntervention(String intervention) {
     // Implement intervention logic
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Starting: $intervention')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Starting: $intervention')));
   }
 
   void _generatePersonalizedTasks(StressAnalysisProvider stressProvider) async {
@@ -798,23 +814,23 @@ class _MorningPrepScreenState extends State<MorningPrepScreen> {
 
   void _startMindfulMoment() {
     // Start mindfulness session
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Starting mindful moment...')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Starting mindful moment...')));
   }
 
   void _startEnergyBoost() {
     // Start energy boosting activity
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Starting energy boost...')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Starting energy boost...')));
   }
 
   void _startFocusSession() {
     // Start focus enhancement session
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Starting focus session...')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Starting focus session...')));
   }
 }
 
@@ -878,15 +894,15 @@ class _BreathingExerciseDialogState extends State<BreathingExerciseDialog>
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         padding: const EdgeInsets.all(32),
-        height: 400,
+        height: 420,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'Breathing Exercise',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text('Cycle ${_currentCycle + 1} of $_totalCycles'),
@@ -923,9 +939,9 @@ class _BreathingExerciseDialogState extends State<BreathingExerciseDialog>
             Text(
               _isInhaling ? 'Breathe In' : 'Breathe Out',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
             ),
             const SizedBox(height: 32),
             TextButton(
