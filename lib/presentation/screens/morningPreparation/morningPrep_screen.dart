@@ -1,8 +1,8 @@
+import 'package:Sahayak/presentation/providers/lesson_provider.dart';
+import 'package:Sahayak/presentation/providers/stress_analysis_provider.dart';
+import 'package:Sahayak/presentation/widgets/shayakCard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:myapp/presentation/providers/stress_analysis_provider.dart';
-import 'package:myapp/presentation/providers/lesson_provider.dart';
-import 'package:myapp/presentation/widgets/shayakCard.dart';
 
 class MorningPrepScreen extends StatefulWidget {
   const MorningPrepScreen({super.key});

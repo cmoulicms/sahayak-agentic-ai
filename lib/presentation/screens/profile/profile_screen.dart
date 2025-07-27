@@ -1,7 +1,8 @@
+import 'package:Sahayak/presentation/providers/auth_provider.dart';
+import 'package:Sahayak/presentation/screens/auth/login_screen.dart';
+import 'package:Sahayak/presentation/widgets/theme_switcher.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/presentation/providers/auth_provider.dart';
-import 'package:myapp/presentation/screens/auth/login_screen.dart';
-import 'package:myapp/presentation/widgets/theme_switcher.dart';
+
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatelessWidget {

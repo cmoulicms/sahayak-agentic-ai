@@ -1,9 +1,10 @@
 import 'dart:io';
 
+import 'package:Sahayak/data/models/aiModels/ai_models.dart';
+import 'package:Sahayak/presentation/providers/ai_assistant_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:myapp/data/models/aiModels/ai_models.dart';
-import 'package:myapp/presentation/providers/ai_assistant_provider.dart';
+
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';

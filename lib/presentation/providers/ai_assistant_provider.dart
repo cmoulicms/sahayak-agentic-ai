@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:Sahayak/data/models/aiModels/ai_models.dart';
+import 'package:Sahayak/data/services/ai_teaching_assistant_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:myapp/data/models/aiModels/ai_models.dart';
-import 'package:myapp/data/services/ai_teaching_assistant_service.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';

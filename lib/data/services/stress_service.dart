@@ -1,10 +1,12 @@
-import 'package:myapp/data/models/stress/stress_analysis_model.dart';
-import 'package:myapp/data/services/local_storage_service.dart';
+import 'package:Sahayak/data/models/stress/stress_analysis_model.dart';
+import 'package:Sahayak/data/services/local_storage_service.dart';
 
 class StressService {
   // Create initial stress profile
   Future<StressProfile> createStressProfile(
-      String teacherId, Map<String, int> initialStressLevels) async {
+    String teacherId,
+    Map<String, int> initialStressLevels,
+  ) async {
     final profile = StressProfile(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       teacherId: teacherId,
@@ -58,13 +60,17 @@ class StressService {
 
   // Get stress logs
   Future<List<DailyStressLog>> getStressLogs(
-      String teacherId, DateTime fromDate) async {
+    String teacherId,
+    DateTime fromDate,
+  ) async {
     return await LocalStorageService.getStressLogs(teacherId, fromDate);
   }
 
   // Get stress metrics
   Future<List<StressReductionMetrics>> getStressMetrics(
-      String teacherId, DateTime fromDate) async {
+    String teacherId,
+    DateTime fromDate,
+  ) async {
     return await LocalStorageService.getStressMetrics(teacherId, fromDate);
   }
 

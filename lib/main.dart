@@ -1,18 +1,19 @@
+import 'package:Sahayak/presentation/providers/ai_assistant_provider.dart';
+import 'package:Sahayak/presentation/providers/auth_provider.dart';
+import 'package:Sahayak/presentation/providers/lesson_provider.dart' show LessonProvider;
+import 'package:Sahayak/presentation/providers/morningPrep_provider.dart';
+import 'package:Sahayak/presentation/providers/stress_analysis_provider.dart';
+import 'package:Sahayak/presentation/providers/theme_provider.dart';
+import 'package:Sahayak/presentation/screens/auth/auth_wrapper.dart';
+import 'package:Sahayak/presentation/screens/auth/login_screen.dart';
+import 'package:Sahayak/presentation/screens/home/dashboard_screen.dart';
+import 'package:Sahayak/presentation/screens/onboarding/onboarding_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:myapp/presentation/providers/stress_analysis_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'package:myapp/presentation/providers/ai_assistant_provider.dart';
-import 'package:myapp/presentation/providers/auth_provider.dart';
-import 'package:myapp/presentation/providers/lesson_provider.dart';
-import 'package:myapp/presentation/providers/morningPrep_provider.dart';
-import 'package:myapp/presentation/providers/theme_provider.dart';
-import 'package:myapp/presentation/screens/auth/auth_wrapper.dart';
-import 'package:myapp/presentation/screens/auth/login_screen.dart';
-import 'package:myapp/presentation/screens/home/dashboard_screen.dart';
-import 'package:myapp/presentation/screens/onboarding/onboarding_screen.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

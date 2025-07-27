@@ -1,4 +1,4 @@
-name: myapp
+name: Sahayak
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -81,6 +81,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
 
 # dependency_overrides:
 #   record_linux: 0.7.1
@@ -97,3 +98,8 @@ flutter:
   assets:
     - assets/key.json
   uses-material-design: true
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo/app_icon.png"

@@ -1,9 +1,8 @@
+import 'package:Sahayak/data/models/aiModels/ai_models.dart';
+import 'package:Sahayak/presentation/providers/ai_assistant_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/data/models/aiModels/ai_models.dart';
-import 'package:myapp/presentation/providers/ai_assistant_provider.dart';
+
 import 'package:provider/provider.dart';
-
-
 
 class SavedContentScreen extends StatelessWidget {
   const SavedContentScreen({super.key});
@@ -11,9 +10,7 @@ class SavedContentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Saved Content'),
-      ),
+      appBar: AppBar(title: const Text('Saved Content')),
       body: Consumer<AIAssistantProvider>(
         builder: (context, provider, child) {
           if (provider.savedContent.isEmpty) {
@@ -21,18 +18,11 @@ class SavedContentScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.bookmark_border,
-                    size: 64,
-                    color: Colors.grey,
-                  ),
+                  Icon(Icons.bookmark_border, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text(
                     'No saved content yet',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
-                    ),
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
                   ),
                   SizedBox(height: 8),
                   Text(
@@ -57,16 +47,15 @@ class SavedContentScreen extends StatelessWidget {
   }
 
   Widget _buildSavedItem(
-      SavedContent item, AIAssistantProvider provider, BuildContext context) {
+    SavedContent item,
+    AIAssistantProvider provider,
+    BuildContext context,
+  ) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: ListTile(
         leading: const Icon(Icons.bookmark),
-        title: Text(
-          item.title,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
+        title: Text(item.title, maxLines: 2, overflow: TextOverflow.ellipsis),
         subtitle: Text(
           _formatDateTime(item.savedAt),
           style: Theme.of(context).textTheme.bodySmall,
@@ -84,8 +73,12 @@ class SavedContentScreen extends StatelessWidget {
     );
   }
 
-  void _handleAction(String action, SavedContent item,
-      AIAssistantProvider provider, BuildContext context) {
+  void _handleAction(
+    String action,
+    SavedContent item,
+    AIAssistantProvider provider,
+    BuildContext context,
+  ) {
     switch (action) {
       case 'view':
         _showContentDetails(item, context);

@@ -1,9 +1,8 @@
+import 'package:Sahayak/data/models/aiModels/ai_models.dart';
+import 'package:Sahayak/presentation/providers/ai_assistant_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/data/models/aiModels/ai_models.dart';
-import 'package:myapp/presentation/providers/ai_assistant_provider.dart';
+
 import 'package:provider/provider.dart';
-
-
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -89,9 +88,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               // History list
               Expanded(
                 child: filteredHistory.isEmpty
-                    ? const Center(
-                        child: Text('No history items found'),
-                      )
+                    ? const Center(child: Text('No history items found'))
                     : ListView.builder(
                         itemCount: filteredHistory.length,
                         itemBuilder: (context, index) {
@@ -112,11 +109,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: ListTile(
         leading: _getTypeIcon(item.type),
-        title: Text(
-          item.title,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
+        title: Text(item.title, maxLines: 2, overflow: TextOverflow.ellipsis),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -176,7 +169,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   void _handleItemAction(
-      String action, HistoryItem item, AIAssistantProvider provider) {
+    String action,
+    HistoryItem item,
+    AIAssistantProvider provider,
+  ) {
     // Implement item actions
   }
 

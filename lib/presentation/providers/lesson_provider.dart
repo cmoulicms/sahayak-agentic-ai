@@ -1,11 +1,12 @@
 // providers/lesson_provider.dart
 
+import 'package:Sahayak/data/models/lesson/enhanced_lesson_plan.dart';
+import 'package:Sahayak/data/models/morningPrep/morningPrep_model.dart';
+import 'package:Sahayak/data/services/ai_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/data/models/lesson/enhanced_lesson_plan.dart';
-import 'package:myapp/data/models/morningPrep/morningPrep_model.dart';
-import 'package:myapp/data/services/ai_service.dart';
+
 
 class LessonProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

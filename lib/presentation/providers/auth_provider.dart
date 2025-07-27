@@ -1,8 +1,8 @@
 // providers/auth_provider.dart
+import 'package:Sahayak/data/models/teacher/teacher_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:myapp/data/models/teacher/teacher_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider extends ChangeNotifier {

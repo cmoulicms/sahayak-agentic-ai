@@ -1,6 +1,7 @@
 // screens/onboarding/onboarding_screen.dart
+import 'package:Sahayak/presentation/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/presentation/providers/auth_provider.dart';
+
 import 'package:provider/provider.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -137,7 +138,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             value: (_currentPage + 1) / 5,
             backgroundColor: Colors.grey.shade300,
           ),
-      
+
           Expanded(
             child: PageView(
               controller: _pageController,
@@ -152,7 +153,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ],
             ),
           ),
-      
+
           // Navigation Buttons
           Padding(
             padding: const EdgeInsets.all(16),

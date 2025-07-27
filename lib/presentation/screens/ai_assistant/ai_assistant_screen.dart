@@ -2,16 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 
 // import 'package:audioplayers/audioplayers.dart';
+import 'package:Sahayak/data/models/aiModels/ai_models.dart';
+import 'package:Sahayak/data/services/transcribe.dart';
+import 'package:Sahayak/presentation/screens/ai_assistant/show_history.dart';
+import 'package:Sahayak/presentation/widgets/shayakCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myapp/data/services/transcribe.dart';
-import 'package:myapp/presentation/screens/ai_assistant/show_history.dart';
-import 'package:provider/provider.dart';
 
-import 'package:myapp/data/models/aiModels/ai_models.dart';
-import 'package:myapp/presentation/widgets/shayakCard.dart';
+import 'package:provider/provider.dart';
 
 import '../../providers/ai_assistant_provider.dart';
 
