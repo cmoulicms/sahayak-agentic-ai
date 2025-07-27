@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:myapp/presentation/providers/stress_analysis_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:myapp/presentation/providers/ai_assistant_provider.dart';
@@ -35,6 +36,7 @@ class SahayakApp extends StatelessWidget {
         // ChangeNotifierProvider(create: (_) => TeacherProvider()),
         ChangeNotifierProvider(create: (_) => LessonProvider()),
         ChangeNotifierProvider(create: (_) => MorningPrepProvider()),
+        ChangeNotifierProvider(create: (_) => StressAnalysisProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
@@ -59,7 +61,7 @@ class SahayakApp extends StatelessWidget {
             routes: {
               '/login': (context) => const LoginScreen(),
               '/onboarding': (context) => const OnboardingScreen(),
-              '/dashboard': (context) => const DashboardScreen(),
+              '/dashboard': (context) => DashboardScreen(),
             },
           );
         },

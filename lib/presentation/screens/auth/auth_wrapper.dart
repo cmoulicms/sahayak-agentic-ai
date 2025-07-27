@@ -1,6 +1,7 @@
 // screens/auth/auth_wrapper.dart
 import 'package:flutter/material.dart';
 import 'package:myapp/presentation/screens/home/dashboard_screen.dart';
+import 'package:myapp/presentation/screens/slpashscreen1.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import 'login_screen.dart';
@@ -16,6 +17,7 @@ class AuthWrapper extends StatelessWidget {
         // Show loading screen while initializing
         if (!authProvider.isInitialized || authProvider.isLoading) {
           return const SplashScreen();
+          // return const SplashScreen1();
         }
 
         // User is not authenticated - show login
@@ -52,18 +54,14 @@ class SplashScreen extends StatelessWidget {
                 color: Theme.of(context).primaryColor,
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Icon(
-                Icons.school,
-                size: 40,
-                color: Colors.white,
-              ),
+              child: const Icon(Icons.school, size: 40, color: Colors.white),
             ),
             const SizedBox(height: 24),
             Text(
               'Sahayak',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
