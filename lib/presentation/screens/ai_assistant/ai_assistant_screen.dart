@@ -867,6 +867,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
+                    isExpanded: true,
                     value: _selectedLanguage,
                     decoration: const InputDecoration(
                       labelText: 'Language',
@@ -900,6 +901,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 const SizedBox(width: 12),
                 Expanded(
                   child: DropdownButtonFormField<String>(
+                    isExpanded: true,
                     value: _selectedSubject,
                     decoration: const InputDecoration(
                       labelText: 'Subject',
@@ -1600,6 +1602,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
+                    isExpanded: true,
                     value: _selectedVisualType,
                     decoration: const InputDecoration(
                       labelText: 'Visual Aid Type',
@@ -1629,6 +1632,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 const SizedBox(width: 12),
                 Expanded(
                   child: DropdownButtonFormField<String>(
+                    isExpanded: true,
                     value: _selectedSubject,
                     decoration: const InputDecoration(
                       labelText: 'Subject',
@@ -2032,6 +2036,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
+                    isExpanded: true,
                     value: _selectedGameType,
                     decoration: const InputDecoration(
                       labelText: 'Game Type',
@@ -2063,6 +2068,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 const SizedBox(width: 12),
                 Expanded(
                   child: DropdownButtonFormField<String>(
+                    isExpanded: true,
                     value: _selectedSubject,
                     decoration: const InputDecoration(
                       labelText: 'Subject',
@@ -2097,6 +2103,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
+                    isExpanded: true,
                     value: _selectedGrade,
                     decoration: const InputDecoration(
                       labelText: 'Grade Level',
@@ -2118,6 +2125,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 const SizedBox(width: 12),
                 Expanded(
                   child: DropdownButtonFormField<int>(
+                    isExpanded: true,
                     value: _selectedDuration,
                     decoration: const InputDecoration(
                       labelText: 'Duration',
