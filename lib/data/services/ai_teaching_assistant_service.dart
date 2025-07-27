@@ -4,9 +4,9 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:myapp/data/models/aiModels/ai_models.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:record/record.dart';
+// import 'package:record/record.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+// import 'package:sahayak_ai2/data/models/aiModels/ai_models.dart';
 // import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 // Import model classes
@@ -16,12 +16,12 @@ class AITeachingAssistantService {
       'https://generativelanguage.googleapis.com/v1beta';
   static const String _vertexAIUrl =
       'https://asia-south1-aiplatform.googleapis.com/v1';
-  static const String _apiKey = 'AIzaSyCEB7jMY2LbEWiKb4WlKulH8zwHGIf8_w4';
+  static const String _apiKey = 'AIzaSyAQbAv78oT-MVMp6OncLPW_gZnDkjqwkhc';
   static const String _projectId = 'com.example.myapp';
 
   // Initialize services
   // final stt.SpeechToText _speechToText = stt.SpeechToText();
-  final AudioRecorder _record = AudioRecorder();
+  // final AudioRecorder _record = AudioRecorder();
   final FlutterTts _flutterTts = FlutterTts();
   String? _recordingPath;
 
@@ -52,30 +52,43 @@ class AITeachingAssistantService {
   }) async {
     final enhancedPrompt =
         '''
-Create educational content in $language for ${gradeLevel ?? 'mixed grade'} students.
-Cultural Context: $culturalContext
-Subject: ${subject ?? 'general'}
-Request: $prompt
+    Create educational content in $language for ${gradeLevel ?? 'mixed grade'} students.
+    Cultural Context: $culturalContext
+    Subject: ${subject ?? 'general'}
+    Request: $prompt
 
-Please provide:
-1. Simple, culturally relevant content
-2. Easy-to-understand language appropriate for the grade level
-3. Local examples and analogies
-4. Interactive elements if applicable
+    Please provide:
+    1. Simple, culturally relevant content
+    2. Easy-to-understand language appropriate for the grade level
+    3. Local examples and analogies
+    4. Interactive elements if applicable
 
-Format the response as structured content that a teacher can easily use.
-''';
+    Format the response only as a JSON object containing the following schema, with no markdown, no asterisks, no headings, no backticks, no extra characters.:
+     
+      "content": "created local content with the title line on the first line", 
+    ''';
 
     final response = await _callGeminiAPI(enhancedPrompt);
 
+    print(response);
+
     return AIContentResponse(
-      content: response['content'] ?? '',
+      content: response['content']['content'] ?? '',
       language: language,
       subject: subject ?? 'general',
       gradeLevel: gradeLevel ?? 'mixed',
       culturallyAdapted: true,
       generatedAt: DateTime.now(),
     );
+  }
+
+  String cleanJson(String maybeInvalidJson) {
+    if (maybeInvalidJson.contains('```')) {
+      final withoutLeading = maybeInvalidJson.split('```json').last;
+      final withoutTrailing = withoutLeading.split('```').first;
+      return withoutTrailing;
+    }
+    return maybeInvalidJson;
   }
 
   // Create differentiated materials
@@ -88,19 +101,19 @@ Format the response as structured content that a teacher can easily use.
     final base64Image = base64Encode(imageBytes);
     final prompt =
         '''
-Analyze this textbook page and create differentiated worksheets for grades: ${targetGrades.join(', ')}.
-Subject: ${subject ?? 'general'}
-Language: ${language ?? 'English'}
+  Analyze this textbook page and create differentiated worksheets for grades: ${targetGrades.join(', ')}.
+  Subject: ${subject ?? 'general'}
+  Language: ${language ?? 'English'}
 
-For each grade level, provide:
-1. Simplified version of the content
-2. Age-appropriate questions
-3. Visual aids descriptions
-4. Hands-on activities
-5. Assessment criteria
+  For each grade level, provide:
+  1. Simplified version of the content
+  2. Age-appropriate questions
+  3. Visual aids descriptions
+  4. Hands-on activities
+  5. Assessment criteria
 
-Make sure content is progressively complex from lower to higher grades.
-''';
+  Make sure content is progressively complex from lower to higher grades.
+  ''';
 
     final response = await _callGeminiVisionAPI(prompt, base64Image);
     List<GradeLevelMaterial> materials = [];
@@ -146,7 +159,7 @@ Provide:
 4. Key elements to emphasize
 5. Interactive elements students can participate in
 
-Make it simple enough to draw with chalk on a blackboard.
+Make it simple enough to draw with chalk on a blackboard with no markdown, no asterisks, no headings, no backticks, no extra characters.
 ''';
 
     final instructionsResponse = await _callGeminiAPI(instructionsPrompt);
@@ -255,7 +268,7 @@ ${includeAnalogy ? '2. Easy-to-understand analogy or example from daily life' : 
 4. Common misconceptions to avoid
 5. Fun facts if relevant
 
-Keep the language simple and engaging for young learners.
+Keep the language simple and engaging for young learners with no markdown, no asterisks, no headings, no backticks, no extra characters..
 ''';
 
     final response = await _callGeminiAPI(prompt);
@@ -322,62 +335,63 @@ Keep the language simple and engaging for young learners.
   //   }
 
   // Audio recording methods
-  Future<void> startRecording() async {
-    try {
-      final status = await Permission.microphone.request();
-      if (status != PermissionStatus.granted) {
-        throw Exception('Microphone permission not granted');
-      }
+  // Future<void> startRecording() async {
+  //   try {
+  //     final status = await Permission.microphone.request();
+  //     if (status != PermissionStatus.granted) {
+  //       throw Exception('Microphone permission not granted');
+  //     }
 
-      if (await _record.hasPermission()) {
-        final Directory tempDir = await getTemporaryDirectory();
-        final String path =
-            '${tempDir.path}/recording_${DateTime.now().millisecondsSinceEpoch}.m4a';
+  //     if (await _record.hasPermission()) {
+  //       final Directory tempDir = await getTemporaryDirectory();
+  //       final String path =
+  //           '${tempDir.path}/recording_${DateTime.now().millisecondsSinceEpoch}.m4a';
 
-        await _record.start(
-          const RecordConfig(
-            encoder: AudioEncoder.aacLc,
-            bitRate: 128000,
-            sampleRate: 44100,
-          ),
-          path: path,
-        );
-        _recordingPath = path;
-      } else {
-        throw Exception('Recording permission not granted');
-      }
-    } catch (e) {
-      throw AIServiceException('Failed to start recording: $e');
-    }
-  }
+  //       await _record.start(
+  //         const RecordConfig(
+  //           encoder: AudioEncoder.aacLc,
+  //           bitRate: 128000,
+  //           sampleRate: 44100,
+  //         ),
+  //         path: path,
+  //       );
+  //       _recordingPath = path;
+  //     } else {
+  //       throw Exception('Recording permission not granted');
+  //     }
+  //   } catch (e) {
+  //     throw AIServiceException('Failed to start recording: $e');
+  //   }
+  // }
 
-  Future<Uint8List?> stopRecording() async {
-    try {
-      final String? path = await _record.stop();
-      if (path != null && _recordingPath != null) {
-        final File audioFile = File(_recordingPath!);
-        if (await audioFile.exists()) {
-          final Uint8List audioBytes = await audioFile.readAsBytes();
-          await audioFile.delete();
-          _recordingPath = null;
-          return audioBytes;
-        }
-      }
-      _recordingPath = null;
-      return null;
-    } catch (e) {
-      throw AIServiceException('Failed to stop recording: $e');
-    }
-  }
+  // Future<Uint8List?> stopRecording() async {
+  //   try {
+  //     final String? path = await _record.stop();
+  //     if (path != null && _recordingPath != null) {
+  //       final File audioFile = File(_recordingPath!);
+  //       if (await audioFile.exists()) {
+  //         final Uint8List audioBytes = await audioFile.readAsBytes();
+  //         await audioFile.delete();
+  //         _recordingPath = null;
+  //         return audioBytes;
+  //       }
+  //     }
+  //     _recordingPath = null;
+  //     return null;
+  //   } catch (e) {
+  //     throw AIServiceException('Failed to stop recording: $e');
+  //   }
+  // }
 
-  Future<bool> isRecording() async {
-    return await _record.isRecording();
-  }
+  // Future<bool> isRecording() async {
+  //   return await _record.isRecording();
+  // }
 
   // Private helper methods
   Future<Map<String, dynamic>> _callGeminiAPI(String prompt) async {
     final url =
         '$_baseUrl/models/gemini-1.5-flash:generateContent?key=$_apiKey';
+
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -416,11 +430,19 @@ Keep the language simple and engaging for young learners.
           ],
         }),
       );
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['candidates'] != null && data['candidates'].isNotEmpty) {
-          final content = data['candidates'][0]['content']['parts'][0]['text'];
-          return {'content': content};
+          final text = data['candidates'][0]['content']['parts'][0]['text'];
+          try {
+            final validJson = cleanJson(text);
+            final parsedContent = jsonDecode(validJson);
+            return {'content': parsedContent};
+          } catch (_) {
+            // If the text isn't JSON, return as-is
+            return {'content': text};
+          }
         } else {
           throw Exception('No content generated by API');
         }
@@ -743,6 +765,8 @@ Keep the language simple and engaging for young learners.
         ? suggestions
         : ['Practice reading aloud', 'Focus on difficult words'];
   }
+
+  _extractContent(Map<String, dynamic> response) {}
 }
 
 // String extension

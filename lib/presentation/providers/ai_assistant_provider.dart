@@ -12,7 +12,6 @@ import 'package:pdf/widgets.dart' as pw;
 
 // Import service and models
 
-
 class AIAssistantProvider extends ChangeNotifier {
   final AITeachingAssistantService _aiService = AITeachingAssistantService();
 
@@ -157,14 +156,16 @@ class AIAssistantProvider extends ChangeNotifier {
         gradeLevel: gradeLevel,
       );
 
-      _addToHistory(HistoryItem(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        type: HistoryItemType.localContent,
-        title: 'Local Content: $prompt',
-        description: 'Generated content for $subject',
-        timestamp: DateTime.now(),
-        data: _lastContentResponse!.toMap(),
-      ));
+      _addToHistory(
+        HistoryItem(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          type: HistoryItemType.localContent,
+          title: 'Local Content: $prompt',
+          description: 'Generated content for $subject',
+          timestamp: DateTime.now(),
+          data: _lastContentResponse!.toMap(),
+        ),
+      );
 
       _clearError();
     } catch (e) {
@@ -190,14 +191,16 @@ class AIAssistantProvider extends ChangeNotifier {
         language: language,
       );
 
-      _addToHistory(HistoryItem(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        type: HistoryItemType.materials,
-        title: 'Materials for Grades ${targetGrades.join(", ")}',
-        description: 'Differentiated materials for $subject',
-        timestamp: DateTime.now(),
-        data: _lastMaterialsResponse!.toMap(),
-      ));
+      _addToHistory(
+        HistoryItem(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          type: HistoryItemType.materials,
+          title: 'Materials for Grades ${targetGrades.join(", ")}',
+          description: 'Differentiated materials for $subject',
+          timestamp: DateTime.now(),
+          data: _lastMaterialsResponse!.toMap(),
+        ),
+      );
 
       _clearError();
     } catch (e) {
@@ -216,11 +219,9 @@ class AIAssistantProvider extends ChangeNotifier {
   }) async {
     _setLoading(true);
 
-    _chatHistory.add(ChatMessage(
-      content: question,
-      isUser: true,
-      timestamp: DateTime.now(),
-    ));
+    _chatHistory.add(
+      ChatMessage(content: question, isUser: true, timestamp: DateTime.now()),
+    );
     notifyListeners();
 
     try {
@@ -231,31 +232,38 @@ class AIAssistantProvider extends ChangeNotifier {
         includeAnalogy: includeAnalogy,
       );
 
-      _chatHistory.add(ChatMessage(
-        content: _lastKnowledgeResponse!.explanation,
-        isUser: false,
-        timestamp: DateTime.now(),
-        knowledgeResponse: _lastKnowledgeResponse,
-      ));
+      _chatHistory.add(
+        ChatMessage(
+          content: _lastKnowledgeResponse!.explanation,
+          isUser: false,
+          timestamp: DateTime.now(),
+          knowledgeResponse: _lastKnowledgeResponse,
+        ),
+      );
 
-      _addToHistory(HistoryItem(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        type: HistoryItemType.knowledge,
-        title: 'Q: $question',
-        description: 'Knowledge base response',
-        timestamp: DateTime.now(),
-        data: _lastKnowledgeResponse!.toMap(),
-      ));
+      _addToHistory(
+        HistoryItem(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          type: HistoryItemType.knowledge,
+          title: 'Q: $question',
+          description: 'Knowledge base response',
+          timestamp: DateTime.now(),
+          data: _lastKnowledgeResponse!.toMap(),
+        ),
+      );
 
       _clearError();
     } catch (e) {
       _setError('Failed to explain concept: $e');
-      _chatHistory.add(ChatMessage(
-        content: 'Sorry, I couldn\'t process that question. Please try again.',
-        isUser: false,
-        timestamp: DateTime.now(),
-        isError: true,
-      ));
+      _chatHistory.add(
+        ChatMessage(
+          content:
+              'Sorry, I couldn\'t process that question. Please try again.',
+          isUser: false,
+          timestamp: DateTime.now(),
+          isError: true,
+        ),
+      );
     } finally {
       _setLoading(false);
       notifyListeners();
@@ -278,14 +286,16 @@ class AIAssistantProvider extends ChangeNotifier {
         gradeLevel: gradeLevel,
       );
 
-      _addToHistory(HistoryItem(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        type: HistoryItemType.visualAid,
-        title: '$type: $concept',
-        description: 'Visual aid for $subject',
-        timestamp: DateTime.now(),
-        data: _lastVisualAidResponse!.toMap(),
-      ));
+      _addToHistory(
+        HistoryItem(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          type: HistoryItemType.visualAid,
+          title: '$type: $concept',
+          description: 'Visual aid for $subject',
+          timestamp: DateTime.now(),
+          data: _lastVisualAidResponse!.toMap(),
+        ),
+      );
 
       _clearError();
     } catch (e) {
@@ -313,14 +323,16 @@ class AIAssistantProvider extends ChangeNotifier {
         duration: duration,
       );
 
-      _addToHistory(HistoryItem(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        type: HistoryItemType.game,
-        title: '$gameType: $topic',
-        description: 'Educational game for $subject',
-        timestamp: DateTime.now(),
-        data: _lastGameResponse!.toMap(),
-      ));
+      _addToHistory(
+        HistoryItem(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          type: HistoryItemType.game,
+          title: '$gameType: $topic',
+          description: 'Educational game for $subject',
+          timestamp: DateTime.now(),
+          data: _lastGameResponse!.toMap(),
+        ),
+      );
 
       _clearError();
     } catch (e) {
@@ -362,26 +374,26 @@ class AIAssistantProvider extends ChangeNotifier {
   // }
 
   // Audio recording methods
-  Future<void> startRecording() async {
-    try {
-      await _aiService.startRecording();
-      _setRecording(true);
-    } catch (e) {
-      _setError('Failed to start recording: $e');
-    }
-  }
+  // Future<void> startRecording() async {
+  //   try {
+  //     await _aiService.startRecording();
+  //     _setRecording(true);
+  //   } catch (e) {
+  //     _setError('Failed to start recording: $e');
+  //   }
+  // }
 
-  Future<Uint8List?> stopRecording() async {
-    try {
-      final audioBytes = await _aiService.stopRecording();
-      _setRecording(false);
-      return audioBytes;
-    } catch (e) {
-      _setError('Failed to stop recording: $e');
-      _setRecording(false);
-      return null;
-    }
-  }
+  // Future<Uint8List?> stopRecording() async {
+  //   try {
+  //     final audioBytes = await _aiService.stopRecording();
+  //     _setRecording(false);
+  //     return audioBytes;
+  //   } catch (e) {
+  //     _setError('Failed to stop recording: $e');
+  //     _setRecording(false);
+  //     return null;
+  //   }
+  // }
 
   // PDF Generation functionality
   Future<String> generatePDF({
@@ -407,10 +419,7 @@ class AIAssistantProvider extends ChangeNotifier {
                 ),
               ),
               pw.SizedBox(height: 20),
-              pw.Text(
-                content,
-                style: const pw.TextStyle(fontSize: 12),
-              ),
+              pw.Text(content, style: const pw.TextStyle(fontSize: 12)),
               if (additionalInfo != null) ...[
                 pw.SizedBox(height: 20),
                 pw.Divider(),
@@ -426,10 +435,7 @@ class AIAssistantProvider extends ChangeNotifier {
               pw.SizedBox(height: 20),
               pw.Text(
                 'Generated on: ${DateTime.now().toString()}',
-                style: pw.TextStyle(
-                  fontSize: 8,
-                  color: PdfColors.grey,
-                ),
+                style: pw.TextStyle(fontSize: 8, color: PdfColors.grey),
               ),
             ];
           },
@@ -456,10 +462,7 @@ class AIAssistantProvider extends ChangeNotifier {
   }) async {
     try {
       if (filePath != null) {
-        await Share.shareXFiles(
-          [XFile(filePath)],
-          text: '$title\n\n$content',
-        );
+        await Share.shareXFiles([XFile(filePath)], text: '$title\n\n$content');
       } else {
         await Share.share('$title\n\n$content');
       }
@@ -582,9 +585,11 @@ class AIAssistantProvider extends ChangeNotifier {
   List<HistoryItem> searchHistory(String query) {
     if (query.isEmpty) return _history;
     return _history
-        .where((item) =>
-            item.title.toLowerCase().contains(query.toLowerCase()) ||
-            item.description.toLowerCase().contains(query.toLowerCase()))
+        .where(
+          (item) =>
+              item.title.toLowerCase().contains(query.toLowerCase()) ||
+              item.description.toLowerCase().contains(query.toLowerCase()),
+        )
         .toList();
   }
 
@@ -610,8 +615,9 @@ class AIAssistantProvider extends ChangeNotifier {
   Future<void> _saveHistory() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final historyJson =
-          json.encode(_history.map((item) => item.toMap()).toList());
+      final historyJson = json.encode(
+        _history.map((item) => item.toMap()).toList(),
+      );
       await prefs.setString('ai_assistant_history', historyJson);
     } catch (e) {
       print('Error saving history: $e');
@@ -625,8 +631,9 @@ class AIAssistantProvider extends ChangeNotifier {
       if (savedJson != null) {
         final List<dynamic> savedList = json.decode(savedJson);
         _savedContent.clear();
-        _savedContent
-            .addAll(savedList.map((item) => SavedContent.fromMap(item)));
+        _savedContent.addAll(
+          savedList.map((item) => SavedContent.fromMap(item)),
+        );
       }
     } catch (e) {
       print('Error loading saved content: $e');
@@ -636,8 +643,9 @@ class AIAssistantProvider extends ChangeNotifier {
   Future<void> _saveSavedContent() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final savedJson =
-          json.encode(_savedContent.map((item) => item.toMap()).toList());
+      final savedJson = json.encode(
+        _savedContent.map((item) => item.toMap()).toList(),
+      );
       await prefs.setString('ai_assistant_saved', savedJson);
     } catch (e) {
       print('Error saving content: $e');
@@ -685,8 +693,9 @@ class AIAssistantProvider extends ChangeNotifier {
       if (data['savedContent'] != null) {
         final List<dynamic> savedList = data['savedContent'];
         _savedContent.clear();
-        _savedContent
-            .addAll(savedList.map((item) => SavedContent.fromMap(item)));
+        _savedContent.addAll(
+          savedList.map((item) => SavedContent.fromMap(item)),
+        );
       }
 
       if (data['likedItems'] != null) {

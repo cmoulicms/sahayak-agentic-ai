@@ -1,9 +1,11 @@
 import 'dart:io';
 
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myapp/data/services/transcribe.dart';
 import 'package:myapp/presentation/screens/ai_assistant/show_history.dart';
 import 'package:provider/provider.dart';
 
@@ -1125,8 +1127,14 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
       children: [
         IconButton(
           icon: const Icon(Icons.volume_up, size: 20),
-          onPressed: () {
-            _showSnackBar('Text-to-speech would be implemented here');
+          onPressed: () async {
+            final audioUrl = await FirebaseSpeechService().textToSpeech(
+              content.content,
+            );
+            // final player = AudioPlayer();
+            // await player.play(UrlSource(audioUrl!));
+            print('');
+            // _showSnackBar('Text-to-speech would be implemented here');
           },
           tooltip: 'Listen',
         ),
