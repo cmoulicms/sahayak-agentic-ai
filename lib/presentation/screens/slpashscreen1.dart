@@ -1,11 +1,11 @@
 // screens/splash/splash_screen.dart
 
+import 'package:Sahayak/presentation/providers/auth_provider.dart';
+import 'package:Sahayak/presentation/providers/theme_provider.dart';
+import 'package:Sahayak/presentation/screens/auth/login_screen.dart';
+import 'package:Sahayak/presentation/screens/home/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:myapp/presentation/providers/auth_provider.dart';
-import 'package:myapp/presentation/providers/theme_provider.dart';
-import 'package:myapp/presentation/screens/auth/login_screen.dart';
-import 'package:myapp/presentation/screens/home/dashboard_screen.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
 

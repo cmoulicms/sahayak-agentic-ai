@@ -1,8 +1,9 @@
 // screens/home/dashboard_screen.dart
+import 'package:Sahayak/presentation/screens/ai_assistant/ai_assistant_screen.dart';
+import 'package:Sahayak/presentation/screens/lessonPlans/lessonPlans_screen.dart';
+import 'package:Sahayak/presentation/screens/morningPreparation/morningPrep_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/presentation/screens/ai_assistant/ai_assistant_screen.dart';
-import 'package:myapp/presentation/screens/lessonPlans/lessonPlans_screen.dart';
-import 'package:myapp/presentation/screens/morningPreparation/morningPrep_screen.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../providers/auth_provider.dart';
@@ -110,31 +111,19 @@ class DashboardHome extends StatelessWidget {
                             children: [
                               Text(
                                 'Welcome, ${teacher.name}!',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineSmall
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                style: Theme.of(context).textTheme.headlineSmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 'Classes: ${teacher.classesHandling.isNotEmpty ? teacher.classesHandling.join(", ") : "None assigned"}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
-                                      color: Colors.grey.shade600,
-                                    ),
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(color: Colors.grey.shade600),
                               ),
                               Text(
                                 'Subjects: ${teacher.subjects.isNotEmpty ? teacher.subjects.take(2).join(", ") : "None assigned"}${teacher.subjects.length > 2 ? "..." : ""}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: Colors.grey.shade600,
-                                    ),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: Colors.grey.shade600),
                               ),
                             ],
                           ),
@@ -150,8 +139,8 @@ class DashboardHome extends StatelessWidget {
                 Text(
                   'AI Assistant',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 12),
 
@@ -238,8 +227,8 @@ class DashboardHome extends StatelessWidget {
                 Text(
                   'Quick Actions',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 12),
 
@@ -286,7 +275,8 @@ class DashboardHome extends StatelessWidget {
                       () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Student Progress coming soon!')),
+                            content: Text('Student Progress coming soon!'),
+                          ),
                         );
                       },
                     ),
@@ -299,7 +289,8 @@ class DashboardHome extends StatelessWidget {
                       () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Wellness Check coming soon!')),
+                            content: Text('Wellness Check coming soon!'),
+                          ),
                         );
                       },
                     ),
@@ -312,8 +303,8 @@ class DashboardHome extends StatelessWidget {
                 Text(
                   'Today\'s Schedule',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 12),
 
@@ -387,17 +378,17 @@ class DashboardHome extends StatelessWidget {
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 4),
               Text(
                 subtitle,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey.shade600,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: Colors.grey.shade600),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -451,19 +442,12 @@ class DashboardHome extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   topic,
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                 ),
               ],
             ),
           ),
-          Icon(
-            Icons.chevron_right,
-            color: Colors.grey.shade400,
-            size: 20,
-          ),
+          Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 20),
         ],
       ),
     );
@@ -511,16 +495,14 @@ class ProfileScreen extends StatelessWidget {
                       const SizedBox(height: 12),
                       Text(
                         teacher?.name ?? 'Teacher',
-                        style:
-                            Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Text(
                         teacher?.email ?? '',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey.shade600,
-                            ),
+                          color: Colors.grey.shade600,
+                        ),
                       ),
                     ],
                   ),
@@ -541,7 +523,8 @@ class ProfileScreen extends StatelessWidget {
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Profile editing coming soon!')),
+                            content: Text('Profile editing coming soon!'),
+                          ),
                         );
                       },
                     ),
@@ -550,13 +533,16 @@ class ProfileScreen extends StatelessWidget {
                       leading: const Icon(Icons.class_outlined),
                       title: const Text('Teaching Details'),
                       subtitle: Text(
-                          'Classes: ${teacher?.classesHandling.join(", ") ?? "None"}'),
+                        'Classes: ${teacher?.classesHandling.join(", ") ?? "None"}',
+                      ),
                       trailing: const Icon(Icons.chevron_right),
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text(
-                                  'Teaching details editing coming soon!')),
+                            content: Text(
+                              'Teaching details editing coming soon!',
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -569,7 +555,8 @@ class ProfileScreen extends StatelessWidget {
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Settings coming soon!')),
+                            content: Text('Settings coming soon!'),
+                          ),
                         );
                       },
                     ),
@@ -598,8 +585,8 @@ class ProfileScreen extends StatelessWidget {
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content:
-                                  Text('Notification settings coming soon!')),
+                            content: Text('Notification settings coming soon!'),
+                          ),
                         );
                       },
                     ),
@@ -612,7 +599,8 @@ class ProfileScreen extends StatelessWidget {
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Language settings coming soon!')),
+                            content: Text('Language settings coming soon!'),
+                          ),
                         );
                       },
                     ),
@@ -634,7 +622,8 @@ class ProfileScreen extends StatelessWidget {
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Help & Support coming soon!')),
+                            content: Text('Help & Support coming soon!'),
+                          ),
                         );
                       },
                     ),
@@ -647,7 +636,8 @@ class ProfileScreen extends StatelessWidget {
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Feedback form coming soon!')),
+                            content: Text('Feedback form coming soon!'),
+                          ),
                         );
                       },
                     ),
@@ -710,11 +700,7 @@ class PlaceholderScreen extends StatelessWidget {
   final String title;
   final IconData icon;
 
-  const PlaceholderScreen({
-    super.key,
-    required this.title,
-    required this.icon,
-  });
+  const PlaceholderScreen({super.key, required this.title, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -728,24 +714,20 @@ class PlaceholderScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: 80,
-              color: Colors.grey.shade400,
-            ),
+            Icon(icon, size: 80, color: Colors.grey.shade400),
             const SizedBox(height: 16),
             Text(
               '$title Coming Soon!',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: Colors.grey.shade600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(color: Colors.grey.shade600),
             ),
             const SizedBox(height: 8),
             Text(
               'This feature is under development',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Colors.grey.shade500,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade500),
             ),
           ],
         ),

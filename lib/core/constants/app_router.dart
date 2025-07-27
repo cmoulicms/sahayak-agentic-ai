@@ -1,8 +1,8 @@
+import 'package:Sahayak/presentation/screens/ai_assistant/ai_assistant_screen.dart';
+import 'package:Sahayak/presentation/screens/features/history_screen.dart';
+import 'package:Sahayak/presentation/screens/features/saved_content_screen.dart';
+import 'package:Sahayak/presentation/screens/features/settings_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/presentation/screens/ai_assistant/ai_assistant_screen.dart';
-import 'package:myapp/presentation/screens/features/history_screen.dart';
-import 'package:myapp/presentation/screens/features/saved_content_screen.dart';
-import 'package:myapp/presentation/screens/features/settings_screen.dart';
 
 // import '../screens/ai_assistant_screen.dart';
 // import '../screens/history_screen.dart';
@@ -42,9 +42,7 @@ class AppRouter {
         );
 
       default:
-        return MaterialPageRoute(
-          builder: (_) => const AIAssistantScreen(),
-        );
+        return MaterialPageRoute(builder: (_) => const AIAssistantScreen());
     }
   }
 }

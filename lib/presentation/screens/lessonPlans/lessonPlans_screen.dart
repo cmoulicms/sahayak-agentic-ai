@@ -1,11 +1,10 @@
 // screens/lesson_planning/lesson_planning_screen.dart
+import 'package:Sahayak/data/models/lesson/enhanced_lesson_plan.dart';
+import 'package:Sahayak/presentation/widgets/shayakCard.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/data/models/lesson/enhanced_lesson_plan.dart';
-import 'package:myapp/presentation/widgets/shayakCard.dart';
+
 // import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
-
 
 import '../../providers/lesson_provider.dart';
 import '../../widgets/error_widget.dart';

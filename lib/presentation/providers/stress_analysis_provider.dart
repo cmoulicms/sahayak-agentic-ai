@@ -1,8 +1,7 @@
+import 'package:Sahayak/data/models/stress/stress_analysis_model.dart';
+import 'package:Sahayak/data/services/ai_teaching_assistant_service.dart';
+import 'package:Sahayak/data/services/stress_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:myapp/data/models/stress/stress_analysis_model.dart';
-
-import 'package:myapp/data/services/ai_teaching_assistant_service.dart';
-import 'package:myapp/data/services/stress_service.dart';
 
 class StressAnalysisProvider with ChangeNotifier {
   final StressService _stressService = StressService();
@@ -30,11 +29,15 @@ class StressAnalysisProvider with ChangeNotifier {
 
   // Initialize stress profile
   Future<void> initializeStressProfile(
-      String teacherId, Map<String, int> initialStressLevels) async {
+    String teacherId,
+    Map<String, int> initialStressLevels,
+  ) async {
     _setLoading(true);
     try {
       _stressProfile = await _stressService.createStressProfile(
-          teacherId, initialStressLevels);
+        teacherId,
+        initialStressLevels,
+      );
       _currentStressLevels = Map.from(initialStressLevels);
       await loadStressData(teacherId);
       _clearError();
@@ -51,9 +54,13 @@ class StressAnalysisProvider with ChangeNotifier {
       final results = await Future.wait([
         _stressService.getStressProfile(teacherId),
         _stressService.getStressLogs(
-            teacherId, DateTime.now().subtract(const Duration(days: 30))),
+          teacherId,
+          DateTime.now().subtract(const Duration(days: 30)),
+        ),
         _stressService.getStressMetrics(
-            teacherId, DateTime.now().subtract(const Duration(days: 7))),
+          teacherId,
+          DateTime.now().subtract(const Duration(days: 7)),
+        ),
       ]);
 
       _stressProfile = results[0] as StressProfile?;
@@ -110,14 +117,18 @@ class StressAnalysisProvider with ChangeNotifier {
 
   // Check if stress intervention is needed
   Future<void> _checkStressInterventions(
-      String teacherId, Map<String, int> stressLevels) async {
-    final highStressAreas =
-        stressLevels.entries.where((entry) => entry.value >= 4).toList();
+    String teacherId,
+    Map<String, int> stressLevels,
+  ) async {
+    final highStressAreas = stressLevels.entries
+        .where((entry) => entry.value >= 4)
+        .toList();
 
     if (highStressAreas.isNotEmpty) {
       // Generate personalized stress relief suggestions
-      final suggestions =
-          await _generateStressReliefSuggestions(highStressAreas);
+      final suggestions = await _generateStressReliefSuggestions(
+        highStressAreas,
+      );
 
       // You can implement notification system here
       // _notificationService.showStressAlert(suggestions);
@@ -126,9 +137,11 @@ class StressAnalysisProvider with ChangeNotifier {
 
   // Generate stress relief suggestions using AI
   Future<List<String>> _generateStressReliefSuggestions(
-      List<MapEntry<String, int>> highStressAreas) async {
+    List<MapEntry<String, int>> highStressAreas,
+  ) async {
     try {
-      final prompt = '''
+      final prompt =
+          '''
       Generate personalized stress relief suggestions for a teacher experiencing high stress in these areas:
       ${highStressAreas.map((e) => '${e.key}: Level ${e.value}/5').join(', ')}
       
@@ -153,7 +166,7 @@ class StressAnalysisProvider with ChangeNotifier {
         'Step outside for 2 minutes of fresh air',
         'Drink a glass of water mindfully',
         'Do some neck and shoulder stretches',
-        'Write down 3 things you\'re grateful for today'
+        'Write down 3 things you\'re grateful for today',
       ];
     }
   }
@@ -168,12 +181,13 @@ class StressAnalysisProvider with ChangeNotifier {
     List<String> questionTypes = const [
       'multiple_choice',
       'fill_blanks',
-      'short_answer'
+      'short_answer',
     ],
   }) async {
     _setLoading(true);
     try {
-      final prompt = '''
+      final prompt =
+          '''
       Create a comprehensive worksheet for:
       - Subject: $subject
       - Grade Level: $gradeLevel
@@ -201,7 +215,12 @@ class StressAnalysisProvider with ChangeNotifier {
       );
 
       final worksheet = _parseWorksheetFromAI(
-          response.content, subject, gradeLevel, topic, difficulty);
+        response.content,
+        subject,
+        gradeLevel,
+        topic,
+        difficulty,
+      );
 
       if (worksheet != null) {
         _worksheets.insert(0, worksheet);
@@ -220,30 +239,37 @@ class StressAnalysisProvider with ChangeNotifier {
   }
 
   // Parse AI response into worksheet structure
-  WorksheetTemplate? _parseWorksheetFromAI(String content, String subject,
-      String gradeLevel, String topic, String difficulty) {
+  WorksheetTemplate? _parseWorksheetFromAI(
+    String content,
+    String subject,
+    String gradeLevel,
+    String topic,
+    String difficulty,
+  ) {
     try {
       // This is a simplified parser - you'd want more robust JSON parsing
       final sections = <WorksheetSection>[];
 
       // Create sample sections for demonstration
-      sections.add(WorksheetSection(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        title: 'Multiple Choice Questions',
-        type: 'multiple_choice',
-        questions: [
-          WorksheetQuestion(
-            id: '1',
-            question: 'Sample question from AI: $topic',
-            options: ['Option A', 'Option B', 'Option C', 'Option D'],
-            correctAnswer: 'Option A',
-            explanation: 'Explanation from AI',
-            points: 2,
-          ),
-        ],
-        instructions: 'Choose the best answer for each question.',
-        points: 10,
-      ));
+      sections.add(
+        WorksheetSection(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          title: 'Multiple Choice Questions',
+          type: 'multiple_choice',
+          questions: [
+            WorksheetQuestion(
+              id: '1',
+              question: 'Sample question from AI: $topic',
+              options: ['Option A', 'Option B', 'Option C', 'Option D'],
+              correctAnswer: 'Option A',
+              explanation: 'Explanation from AI',
+              points: 2,
+            ),
+          ],
+          instructions: 'Choose the best answer for each question.',
+          points: 10,
+        ),
+      );
 
       return WorksheetTemplate(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -254,7 +280,7 @@ class StressAnalysisProvider with ChangeNotifier {
         sections: sections,
         aiGeneratedContent: {
           'content': content,
-          'generated_at': DateTime.now().toIso8601String()
+          'generated_at': DateTime.now().toIso8601String(),
         },
         createdAt: DateTime.now(),
       );
@@ -284,16 +310,18 @@ class StressAnalysisProvider with ChangeNotifier {
       'behavior',
       'admin',
       'parents',
-      'technology'
+      'technology',
     ];
 
     for (final factor in stressFactors) {
       final values = last7Days
-          .map((log) =>
-              (log.morningStress[factor] ??
-                  0 + log.midDayStress[factor]! ??
-                  0) /
-              3)
+          .map(
+            (log) =>
+                (log.morningStress[factor] ??
+                    0 + log.midDayStress[factor]! ??
+                    0) /
+                3,
+          )
           .toList();
 
       if (values.isNotEmpty) {
@@ -313,7 +341,8 @@ class StressAnalysisProvider with ChangeNotifier {
 
     final recent =
         logs.take(3).map((l) => l.overallWellness).reduce((a, b) => a + b) / 3;
-    final older = logs
+    final older =
+        logs
             .skip(3)
             .take(3)
             .map((l) => l.overallWellness)
@@ -333,18 +362,21 @@ class StressAnalysisProvider with ChangeNotifier {
         switch (factor) {
           case 'workload':
             recommendations.add(
-                'Consider using AI lesson planning to reduce preparation time');
+              'Consider using AI lesson planning to reduce preparation time',
+            );
             break;
           case 'resources':
-            recommendations
-                .add('Explore the AI resource generator for quick materials');
+            recommendations.add(
+              'Explore the AI resource generator for quick materials',
+            );
             break;
           case 'admin':
             recommendations.add('Try automated progress tracking features');
             break;
           case 'parents':
-            recommendations
-                .add('Use communication templates for parent interactions');
+            recommendations.add(
+              'Use communication templates for parent interactions',
+            );
             break;
         }
       }
@@ -355,7 +387,9 @@ class StressAnalysisProvider with ChangeNotifier {
 
   // Update stress profile with new data
   Future<void> _updateStressProfile(
-      String teacherId, Map<String, int> newStressLevels) async {
+    String teacherId,
+    Map<String, int> newStressLevels,
+  ) async {
     if (_stressProfile == null) return;
 
     try {

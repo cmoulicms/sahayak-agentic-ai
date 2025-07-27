@@ -1,8 +1,9 @@
+import 'package:Sahayak/data/models/aiModels/ai_models.dart';
+import 'package:Sahayak/presentation/providers/ai_assistant_provider.dart';
+import 'package:Sahayak/presentation/screens/ai_assistant/show_history_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:myapp/data/models/aiModels/ai_models.dart';
-import 'package:myapp/presentation/providers/ai_assistant_provider.dart';
-import 'package:myapp/presentation/screens/ai_assistant/show_history_details.dart';
+
 import 'package:provider/provider.dart';
 
 class ShowHistory extends StatefulWidget {

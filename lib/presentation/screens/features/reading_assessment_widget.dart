@@ -1,15 +1,12 @@
+import 'package:Sahayak/presentation/providers/ai_assistant_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/presentation/providers/ai_assistant_provider.dart';
 
 import 'package:provider/provider.dart';
 
 class ReadingAssessmentWidget extends StatefulWidget {
   final String expectedText;
 
-  const ReadingAssessmentWidget({
-    super.key,
-    required this.expectedText,
-  });
+  const ReadingAssessmentWidget({super.key, required this.expectedText});
 
   @override
   State<ReadingAssessmentWidget> createState() =>
@@ -68,8 +65,9 @@ class _ReadingAssessmentWidgetState extends State<ReadingAssessmentWidget>
                             ? Colors.red.withOpacity(0.2)
                             : Colors.blue.withOpacity(0.2),
                         border: Border.all(
-                          color:
-                              provider.isRecording ? Colors.red : Colors.blue,
+                          color: provider.isRecording
+                              ? Colors.red
+                              : Colors.blue,
                           width: 4,
                         ),
                       ),

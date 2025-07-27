@@ -2,16 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 
 // import 'package:audioplayers/audioplayers.dart';
+import 'package:Sahayak/data/models/aiModels/ai_models.dart';
+import 'package:Sahayak/data/services/transcribe.dart';
+import 'package:Sahayak/presentation/screens/ai_assistant/show_history.dart';
+import 'package:Sahayak/presentation/widgets/shayakCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myapp/data/services/transcribe.dart';
-import 'package:myapp/presentation/screens/ai_assistant/show_history.dart';
-import 'package:provider/provider.dart';
 
-import 'package:myapp/data/models/aiModels/ai_models.dart';
-import 'package:myapp/presentation/widgets/shayakCard.dart';
+import 'package:provider/provider.dart';
 
 import '../../providers/ai_assistant_provider.dart';
 
@@ -37,9 +37,21 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
   final TextEditingController _conceptController = TextEditingController();
   final TextEditingController _topicController = TextEditingController();
 
+  static const List<String> _subjects = [
+    'General',
+    'Mathematics',
+    'Science',
+    'English',
+    'Social Studies',
+    'Arts',
+    'Physical Education',
+    'Environmental Studies',
+  ];
+
   // Selected values for dropdowns
   String _selectedLanguage = 'English';
-  String _selectedSubject = 'General';
+  String _selectedSubject = _subjects.first;
+  // String _selectedSubject = 'General';
   String _selectedGrade = 'Elementary';
   String _selectedVisualType = 'diagram';
   String _selectedGameType = 'quiz';
@@ -908,24 +920,24 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.subject),
                     ),
-                    items:
-                        [
-                              'General',
-                              'Mathematics',
-                              'Science',
-                              'English',
-                              'Social Studies',
-                              'Arts',
-                              'Physical Education',
-                              'Environmental Studies',
-                            ]
-                            .map(
-                              (subject) => DropdownMenuItem(
-                                value: subject,
-                                child: Text(subject),
-                              ),
-                            )
-                            .toList(),
+                    items: _subjects
+                        // [
+                        //       'General',
+                        //       'Mathematics',
+                        //       'Science',
+                        //       'English',
+                        //       'Social Studies',
+                        //       'Arts',
+                        //       'Physical Education',
+                        //       'Environmental Studies',
+                        //     ]
+                        .map(
+                          (subject) => DropdownMenuItem(
+                            value: subject,
+                            child: Text(subject),
+                          ),
+                        )
+                        .toList(),
                     onChanged: (value) =>
                         setState(() => _selectedSubject = value!),
                   ),
@@ -1639,22 +1651,22 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.subject),
                     ),
-                    items:
-                        [
-                              'General',
-                              'Science',
-                              'Mathematics',
-                              'History',
-                              'Geography',
-                              'Arts',
-                            ]
-                            .map(
-                              (subject) => DropdownMenuItem(
-                                value: subject,
-                                child: Text(subject),
-                              ),
-                            )
-                            .toList(),
+                    items: _subjects
+                        // [
+                        //       'General',
+                        //       'Science',
+                        //       'Mathematics',
+                        //       'History',
+                        //       'Geography',
+                        //       'Arts',
+                        //     ]
+                        .map(
+                          (subject) => DropdownMenuItem(
+                            value: subject,
+                            child: Text(subject),
+                          ),
+                        )
+                        .toList(),
                     onChanged: (value) =>
                         setState(() => _selectedSubject = value!),
                   ),
@@ -2075,23 +2087,23 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.subject),
                     ),
-                    items:
-                        [
-                              'General',
-                              'Mathematics',
-                              'Science',
-                              'English',
-                              'Social Studies',
-                              'Arts',
-                              'Physical Education',
-                            ]
-                            .map(
-                              (subject) => DropdownMenuItem(
-                                value: subject,
-                                child: Text(subject),
-                              ),
-                            )
-                            .toList(),
+                    items: _subjects
+                        // [
+                        //       'General',
+                        //       'Mathematics',
+                        //       'Science',
+                        //       'English',
+                        //       'Social Studies',
+                        //       'Arts',
+                        //       'Physical Education',
+                        //     ]
+                        .map(
+                          (subject) => DropdownMenuItem(
+                            value: subject,
+                            child: Text(subject),
+                          ),
+                        )
+                        .toList(),
                     onChanged: (value) =>
                         setState(() => _selectedSubject = value!),
                   ),

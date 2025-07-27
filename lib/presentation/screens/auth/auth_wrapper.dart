@@ -1,7 +1,7 @@
 // screens/auth/auth_wrapper.dart
+import 'package:Sahayak/presentation/screens/home/dashboard_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/presentation/screens/home/dashboard_screen.dart';
-import 'package:myapp/presentation/screens/slpashscreen1.dart';
+
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import 'login_screen.dart';
@@ -66,9 +66,9 @@ class SplashScreen extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               'Your AI Teaching Assistant',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Colors.grey.shade600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: Colors.grey.shade600),
             ),
             const SizedBox(height: 32),
             const CircularProgressIndicator(),
