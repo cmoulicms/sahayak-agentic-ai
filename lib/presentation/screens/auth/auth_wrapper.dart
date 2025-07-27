@@ -16,8 +16,8 @@ class AuthWrapper extends StatelessWidget {
       builder: (context, authProvider, child) {
         // Show loading screen while initializing
         if (!authProvider.isInitialized || authProvider.isLoading) {
-          // return const SplashScreen();
-          return const SplashScreen1();
+          return const SplashScreen();
+          // return const SplashScreen1();
         }
 
         // User is not authenticated - show login

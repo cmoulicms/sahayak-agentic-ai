@@ -56,12 +56,12 @@ dependencies:
   image_picker: ^1.0.4
   cached_network_image: ^3.3.0
   sqflite: ^2.3.2
-  record: ^5.1.0
+  # record: ^5.1.0
   # record: ^5.0.4 # Make sure this version is correct
   permission_handler: ^11.1.0 # Add this for permissions
   file_picker: ^8.0.7
   flutter_tts: ^3.8.5
-  speech_to_text: ^7.2.0
+  # speech_to_text: ^7.2.0
   share_plus: ^7.2.1
   # record: ^6.0.0
   crypto: ^3.0.3
@@ -79,9 +79,9 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
 
-dependency_overrides:
-  record_linux: 0.7.1
-  record_platform_interface: 1.2.0
+# dependency_overrides:
+#   record_linux: 0.7.1
+#   record_platform_interface: 1.2.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

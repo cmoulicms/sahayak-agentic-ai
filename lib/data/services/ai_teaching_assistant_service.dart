@@ -772,7 +772,7 @@ import 'package:myapp/data/models/aiModels/ai_models.dart';
 import 'package:path_provider/path_provider.dart';
 // import 'package:record/record.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
+// import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 // Import model classes
 
@@ -788,7 +788,7 @@ class AITeachingAssistantService {
   static const String _projectId = 'com.example.myapp';
 
   // Initialize services
-  final stt.SpeechToText _speechToText = stt.SpeechToText();
+  // final stt.SpeechToText _speechToText = stt.SpeechToText();
   // final AudioRecorder _record = AudioRecorder();
   final FlutterTts _flutterTts = FlutterTts();
   String? _recordingPath;
@@ -1054,57 +1054,57 @@ Keep the language simple and engaging for young learners with no markdown, no as
   }
 
   // Reading assessment
-  Future<ReadingAssessmentResponse> assessReading({
-    required Uint8List audioBytes,
-    required String expectedText,
-    String? language,
-    String? gradeLevel,
-  }) async {
-    try {
-      final transcription = await _speechToTextFromBytes(
-        audioBytes,
-        language ?? 'en-US',
-      );
+//   Future<ReadingAssessmentResponse> assessReading({
+//     required Uint8List audioBytes,
+//     required String expectedText,
+//     String? language,
+//     String? gradeLevel,
+//   }) async {
+//     try {
+//       final transcription = await _speechToTextFromBytes(
+//         audioBytes,
+//         language ?? 'en-US',
+//       );
 
-      final analysisPrompt =
-          '''
-Compare the expected text with the actual reading transcription for ${gradeLevel ?? 'elementary'} level assessment.
+//       final analysisPrompt =
+//           '''
+// Compare the expected text with the actual reading transcription for ${gradeLevel ?? 'elementary'} level assessment.
 
-Expected: "$expectedText"
-Actual: "$transcription"
+// Expected: "$expectedText"
+// Actual: "$transcription"
 
-Provide detailed reading assessment with:
-1. Accuracy percentage (0-100)
-2. Specific pronunciation errors with corrections
-3. Fluency rating (1-5 scale: 1=very slow/choppy, 5=smooth/natural)
-4. Areas for improvement with specific suggestions
-5. Positive feedback and encouragement
-6. Suggested practice activities for improvement
-7. Words or sounds that need special attention
+// Provide detailed reading assessment with:
+// 1. Accuracy percentage (0-100)
+// 2. Specific pronunciation errors with corrections
+// 3. Fluency rating (1-5 scale: 1=very slow/choppy, 5=smooth/natural)
+// 4. Areas for improvement with specific suggestions
+// 5. Positive feedback and encouragement
+// 6. Suggested practice activities for improvement
+// 7. Words or sounds that need special attention
 
-Format the response as structured data that can be easily parsed.
-''';
+// Format the response as structured data that can be easily parsed.
+// ''';
 
-      final analysis = await _callGeminiAPI(analysisPrompt);
+//       final analysis = await _callGeminiAPI(analysisPrompt);
 
-      return ReadingAssessmentResponse(
-        expectedText: expectedText,
-        actualTranscription: transcription,
-        accuracyPercentage: _calculateAccuracy(expectedText, transcription),
-        fluencyRating: _extractFluencyRating(analysis),
-        pronunciationErrors: _extractErrors(analysis),
-        feedback:
-            analysis['feedback'] ??
-            analysis['content'] ??
-            'Assessment completed.',
-        suggestions: _extractSuggestions(analysis),
-        language: language ?? 'English',
-        assessedAt: DateTime.now(),
-      );
-    } catch (e) {
-      throw AIServiceException('Failed to assess reading: $e');
-    }
-  }
+//       return ReadingAssessmentResponse(
+//         expectedText: expectedText,
+//         actualTranscription: transcription,
+//         accuracyPercentage: _calculateAccuracy(expectedText, transcription),
+//         fluencyRating: _extractFluencyRating(analysis),
+//         pronunciationErrors: _extractErrors(analysis),
+//         feedback:
+//             analysis['feedback'] ??
+//             analysis['content'] ??
+//             'Assessment completed.',
+//         suggestions: _extractSuggestions(analysis),
+//         language: language ?? 'English',
+//         assessedAt: DateTime.now(),
+//       );
+//     } catch (e) {
+//       throw AIServiceException('Failed to assess reading: $e');
+//     }
+//   }
 
   // Audio recording methods
   // Future<void> startRecording() async {
@@ -1377,39 +1377,39 @@ Format the response as structured data that can be easily parsed.
 ''';
   }
 
-  Future<String> _speechToTextFromBytes(
-    Uint8List audioBytes,
-    String language,
-  ) async {
-    try {
-      bool available = await _speechToText.initialize(
-        onStatus: (status) => print('Speech recognition status: $status'),
-        onError: (errorNotification) =>
-            print('Speech recognition error: $errorNotification'),
-      );
+  // Future<String> _speechToTextFromBytes(
+  //   Uint8List audioBytes,
+  //   String language,
+  // ) async {
+  //   try {
+  //     bool available = await _speechToText.initialize(
+  //       onStatus: (status) => print('Speech recognition status: $status'),
+  //       onError: (errorNotification) =>
+  //           print('Speech recognition error: $errorNotification'),
+  //     );
 
-      if (!available) {
-        throw Exception('Speech recognition not available on this device');
-      }
+  //     if (!available) {
+  //       throw Exception('Speech recognition not available on this device');
+  //     }
 
-      final Directory tempDir = await getTemporaryDirectory();
-      final File tempAudioFile = File(
-        '${tempDir.path}/temp_audio_${DateTime.now().millisecondsSinceEpoch}.wav',
-      );
-      await tempAudioFile.writeAsBytes(audioBytes);
+  //     final Directory tempDir = await getTemporaryDirectory();
+  //     final File tempAudioFile = File(
+  //       '${tempDir.path}/temp_audio_${DateTime.now().millisecondsSinceEpoch}.wav',
+  //     );
+  //     await tempAudioFile.writeAsBytes(audioBytes);
 
-      await Future.delayed(const Duration(seconds: 2));
+  //     await Future.delayed(const Duration(seconds: 2));
 
-      if (await tempAudioFile.exists()) {
-        await tempAudioFile.delete();
-      }
+  //     if (await tempAudioFile.exists()) {
+  //       await tempAudioFile.delete();
+  //     }
 
-      return "This is a simulated transcription of the recorded audio. In a real implementation, this would contain the actual speech-to-text result from the audio file.";
-    } catch (e) {
-      print('Speech-to-text error: $e');
-      throw AIServiceException('Failed to transcribe audio: $e');
-    }
-  }
+  //     return "This is a simulated transcription of the recorded audio. In a real implementation, this would contain the actual speech-to-text result from the audio file.";
+  //   } catch (e) {
+  //     print('Speech-to-text error: $e');
+  //     throw AIServiceException('Failed to transcribe audio: $e');
+  //   }
+  // }
 
   // Helper extraction methods
   List<String> _extractActivities(Map<String, dynamic> response, String grade) {
