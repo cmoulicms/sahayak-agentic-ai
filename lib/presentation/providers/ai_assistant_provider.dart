@@ -12,7 +12,6 @@ import 'package:pdf/widgets.dart' as pw;
 
 // Import service and models
 
-
 class AIAssistantProvider extends ChangeNotifier {
   final AITeachingAssistantService _aiService = AITeachingAssistantService();
 
@@ -362,26 +361,26 @@ class AIAssistantProvider extends ChangeNotifier {
   // }
 
   // Audio recording methods
-  Future<void> startRecording() async {
-    try {
-      await _aiService.startRecording();
-      _setRecording(true);
-    } catch (e) {
-      _setError('Failed to start recording: $e');
-    }
-  }
+  // Future<void> startRecording() async {
+  //   try {
+  //     await _aiService.startRecording();
+  //     _setRecording(true);
+  //   } catch (e) {
+  //     _setError('Failed to start recording: $e');
+  //   }
+  // }
 
-  Future<Uint8List?> stopRecording() async {
-    try {
-      final audioBytes = await _aiService.stopRecording();
-      _setRecording(false);
-      return audioBytes;
-    } catch (e) {
-      _setError('Failed to stop recording: $e');
-      _setRecording(false);
-      return null;
-    }
-  }
+  // Future<Uint8List?> stopRecording() async {
+  //   try {
+  //     final audioBytes = await _aiService.stopRecording();
+  //     _setRecording(false);
+  //     return audioBytes;
+  //   } catch (e) {
+  //     _setError('Failed to stop recording: $e');
+  //     _setRecording(false);
+  //     return null;
+  //   }
+  // }
 
   // PDF Generation functionality
   Future<String> generatePDF({
