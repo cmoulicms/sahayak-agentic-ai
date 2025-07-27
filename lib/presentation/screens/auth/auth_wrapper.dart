@@ -67,7 +67,7 @@ class SplashScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Your Teaching Assistant',
+              'Your AI Teaching Assistant',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: Colors.grey.shade600,
                   ),

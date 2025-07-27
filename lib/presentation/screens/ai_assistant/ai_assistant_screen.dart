@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myapp/presentation/screens/ai_assistant/show_history.dart';
 import 'package:provider/provider.dart';
-
 
 import 'package:myapp/data/models/aiModels/ai_models.dart';
 import 'package:myapp/presentation/widgets/shayakCard.dart';
@@ -96,7 +96,10 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
         actions: [
           IconButton(
             icon: const Icon(Icons.history),
-            onPressed: () => _showHistoryDialog(),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ShowHistory()),
+            ),
             tooltip: 'History',
           ),
           PopupMenuButton<String>(
@@ -153,7 +156,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
       builder: (context) => AlertDialog(
         title: const Text('Clear History'),
         content: const Text(
-            'Are you sure you want to clear all history? This action cannot be undone.'),
+          'Are you sure you want to clear all history? This action cannot be undone.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -161,8 +165,10 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           ),
           TextButton(
             onPressed: () {
-              Provider.of<AIAssistantProvider>(context, listen: false)
-                  .clearHistory();
+              Provider.of<AIAssistantProvider>(
+                context,
+                listen: false,
+              ).clearHistory();
               Navigator.pop(context);
               _showSnackBar('History cleared');
             },
@@ -225,8 +231,11 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(item.description,
-                maxLines: 1, overflow: TextOverflow.ellipsis),
+            Text(
+              item.description,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
             Text(
               _formatDateTime(item.timestamp),
               style: Theme.of(context).textTheme.bodySmall,
@@ -269,7 +278,10 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
   }
 
   void _handleHistoryAction(
-      String action, HistoryItem item, AIAssistantProvider provider) async {
+    String action,
+    HistoryItem item,
+    AIAssistantProvider provider,
+  ) async {
     switch (action) {
       case 'share':
         await _shareHistoryItem(item, provider);
@@ -288,8 +300,11 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
   }
 
   Future<void> _shareHistoryItem(
-      HistoryItem item, AIAssistantProvider provider) async {
-    String content = item.data['content'] ??
+    HistoryItem item,
+    AIAssistantProvider provider,
+  ) async {
+    String content =
+        item.data['content'] ??
         item.data['explanation'] ??
         'Content not available';
     // Implement actual sharing here
@@ -297,8 +312,11 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
   }
 
   Future<void> _copyHistoryItem(
-      HistoryItem item, AIAssistantProvider provider) async {
-    String content = item.data['content'] ??
+    HistoryItem item,
+    AIAssistantProvider provider,
+  ) async {
+    String content =
+        item.data['content'] ??
         item.data['explanation'] ??
         'Content not available';
     await Clipboard.setData(ClipboardData(text: '${item.title}\n\n$content'));
@@ -306,7 +324,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
   }
 
   Future<void> _downloadHistoryItem(
-      HistoryItem item, AIAssistantProvider provider) async {
+    HistoryItem item,
+    AIAssistantProvider provider,
+  ) async {
     _showSnackBar('PDF download functionality would be implemented here');
   }
 
@@ -354,25 +374,25 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 children: [
                   ElevatedButton.icon(
                     onPressed: () => _shareHistoryItem(
-                        item,
-                        Provider.of<AIAssistantProvider>(context,
-                            listen: false)),
+                      item,
+                      Provider.of<AIAssistantProvider>(context, listen: false),
+                    ),
                     icon: const Icon(Icons.share),
                     label: const Text('Share'),
                   ),
                   ElevatedButton.icon(
                     onPressed: () => _copyHistoryItem(
-                        item,
-                        Provider.of<AIAssistantProvider>(context,
-                            listen: false)),
+                      item,
+                      Provider.of<AIAssistantProvider>(context, listen: false),
+                    ),
                     icon: const Icon(Icons.copy),
                     label: const Text('Copy'),
                   ),
                   ElevatedButton.icon(
                     onPressed: () => _downloadHistoryItem(
-                        item,
-                        Provider.of<AIAssistantProvider>(context,
-                            listen: false)),
+                      item,
+                      Provider.of<AIAssistantProvider>(context, listen: false),
+                    ),
                     icon: const Icon(Icons.download),
                     label: const Text('PDF'),
                   ),
@@ -386,9 +406,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   // ------------------------------ Knowledge Base Tab ------------------------------
@@ -508,14 +528,14 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       Expanded(
                         child: Text(
                           message.content,
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: message.isError
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .onErrorContainer
-                                        : null,
-                                  ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: message.isError
+                                    ? Theme.of(
+                                        context,
+                                      ).colorScheme.onErrorContainer
+                                    : null,
+                              ),
                         ),
                       ),
                       if (!message.isUser && !message.isError) ...[
@@ -523,7 +543,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                           icon: const Icon(Icons.volume_up, size: 20),
                           onPressed: () {
                             _showSnackBar(
-                                'Text-to-speech would be implemented here');
+                              'Text-to-speech would be implemented here',
+                            );
                           },
                           tooltip: 'Listen',
                         ),
@@ -619,15 +640,16 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                     Text(
                       'Think of it this way:',
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const Spacer(),
                     IconButton(
                       icon: const Icon(Icons.volume_up, size: 16),
                       onPressed: () {
                         _showSnackBar(
-                            'Text-to-speech would be implemented here');
+                          'Text-to-speech would be implemented here',
+                        );
                       },
                     ),
                   ],
@@ -644,18 +666,21 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
             title: const Text('Key Points'),
             leading: const Icon(Icons.key),
             children: response.keyPoints
-                .map((point) => ListTile(
-                      leading: const Icon(Icons.arrow_right, size: 16),
-                      title: Text(point),
-                      dense: true,
-                      trailing: IconButton(
-                        icon: const Icon(Icons.volume_up, size: 16),
-                        onPressed: () {
-                          _showSnackBar(
-                              'Text-to-speech would be implemented here');
-                        },
-                      ),
-                    ))
+                .map(
+                  (point) => ListTile(
+                    leading: const Icon(Icons.arrow_right, size: 16),
+                    title: Text(point),
+                    dense: true,
+                    trailing: IconButton(
+                      icon: const Icon(Icons.volume_up, size: 16),
+                      onPressed: () {
+                        _showSnackBar(
+                          'Text-to-speech would be implemented here',
+                        );
+                      },
+                    ),
+                  ),
+                )
                 .toList(),
           ),
         ],
@@ -664,18 +689,21 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
             title: const Text('Fun Facts'),
             leading: const Icon(Icons.star),
             children: response.funFacts
-                .map((fact) => ListTile(
-                      leading: const Icon(Icons.star_border, size: 16),
-                      title: Text(fact),
-                      dense: true,
-                      trailing: IconButton(
-                        icon: const Icon(Icons.volume_up, size: 16),
-                        onPressed: () {
-                          _showSnackBar(
-                              'Text-to-speech would be implemented here');
-                        },
-                      ),
-                    ))
+                .map(
+                  (fact) => ListTile(
+                    leading: const Icon(Icons.star_border, size: 16),
+                    title: Text(fact),
+                    dense: true,
+                    trailing: IconButton(
+                      icon: const Icon(Icons.volume_up, size: 16),
+                      onPressed: () {
+                        _showSnackBar(
+                          'Text-to-speech would be implemented here',
+                        );
+                      },
+                    ),
+                  ),
+                )
                 .toList(),
           ),
         ],
@@ -722,7 +750,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       width: 16,
                       height: 16,
                       child: CircularProgressIndicator(
-                          strokeWidth: 2, color: Colors.white),
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
                     )
                   : const Icon(Icons.send, color: Colors.white),
               onPressed: aiProvider.isLoading ? null : _sendMessage,
@@ -776,9 +806,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           Text(
             'Create culturally relevant content in your local language',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                ),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
           ),
           const SizedBox(height: 24),
           _buildLocalContentForm(),
@@ -812,10 +841,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 const SizedBox(width: 8),
                 Text(
                   'Content Request',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -842,23 +870,26 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.translate),
                     ),
-                    items: [
-                      'English',
-                      'Hindi',
-                      'Kannada',
-                      'Marathi',
-                      'Tamil',
-                      'Telugu',
-                      'Bengali',
-                      'Gujarati',
-                      'Odia',
-                      'Punjabi',
-                    ]
-                        .map((lang) => DropdownMenuItem(
-                              value: lang,
-                              child: Text(lang),
-                            ))
-                        .toList(),
+                    items:
+                        [
+                              'English',
+                              'Hindi',
+                              'Kannada',
+                              'Marathi',
+                              'Tamil',
+                              'Telugu',
+                              'Bengali',
+                              'Gujarati',
+                              'Odia',
+                              'Punjabi',
+                            ]
+                            .map(
+                              (lang) => DropdownMenuItem(
+                                value: lang,
+                                child: Text(lang),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (value) =>
                         setState(() => _selectedLanguage = value!),
                   ),
@@ -872,21 +903,24 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.subject),
                     ),
-                    items: [
-                      'General',
-                      'Mathematics',
-                      'Science',
-                      'English',
-                      'Social Studies',
-                      'Arts',
-                      'Physical Education',
-                      'Environmental Studies',
-                    ]
-                        .map((subject) => DropdownMenuItem(
-                              value: subject,
-                              child: Text(subject),
-                            ))
-                        .toList(),
+                    items:
+                        [
+                              'General',
+                              'Mathematics',
+                              'Science',
+                              'English',
+                              'Social Studies',
+                              'Arts',
+                              'Physical Education',
+                              'Environmental Studies',
+                            ]
+                            .map(
+                              (subject) => DropdownMenuItem(
+                                value: subject,
+                                child: Text(subject),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (value) =>
                         setState(() => _selectedSubject = value!),
                   ),
@@ -905,10 +939,12 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       prefixIcon: Icon(Icons.school),
                     ),
                     items: ['Elementary', 'Middle', 'High School']
-                        .map((grade) => DropdownMenuItem(
-                              value: grade,
-                              child: Text(grade),
-                            ))
+                        .map(
+                          (grade) => DropdownMenuItem(
+                            value: grade,
+                            child: Text(grade),
+                          ),
+                        )
                         .toList(),
                     onChanged: (value) =>
                         setState(() => _selectedGrade = value!),
@@ -933,16 +969,17 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 return SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed: aiProvider.isLoading ||
+                    onPressed:
+                        aiProvider.isLoading ||
                             _promptController.text.trim().isEmpty
                         ? null
                         : () => aiProvider.generateLocalContent(
-                              prompt: _promptController.text,
-                              language: _selectedLanguage,
-                              culturalContext: _culturalContextController.text,
-                              subject: _selectedSubject,
-                              gradeLevel: _selectedGrade,
-                            ),
+                            prompt: _promptController.text,
+                            language: _selectedLanguage,
+                            culturalContext: _culturalContextController.text,
+                            subject: _selectedSubject,
+                            gradeLevel: _selectedGrade,
+                          ),
                     icon: aiProvider.isLoading
                         ? const SizedBox(
                             width: 16,
@@ -983,10 +1020,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
             const SizedBox(width: 8),
             Text(
               'Generated Content',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w600),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
             const Spacer(),
             _buildContentActionButtons(content),
@@ -997,8 +1033,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color:
-                Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+            color: Theme.of(
+              context,
+            ).colorScheme.primaryContainer.withOpacity(0.3),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
@@ -1010,8 +1047,10 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
               Row(
                 children: [
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(12),
@@ -1027,8 +1066,10 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   ),
                   const SizedBox(width: 8),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.secondary,
                       borderRadius: BorderRadius.circular(12),
@@ -1046,7 +1087,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   if (content.culturallyAdapted)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(12),
@@ -1201,9 +1244,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           Text(
             'Upload a textbook page to create grade-specific worksheets',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                ),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
           ),
           const SizedBox(height: 24),
           _buildImageUploadSection(),
@@ -1256,11 +1298,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
             Text(
               'Take a photo or select an image from gallery',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.7),
-                  ),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
             ),
             const SizedBox(height: 24),
             Row(
@@ -1336,7 +1375,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 return SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed: _selectedImage == null ||
+                    onPressed:
+                        _selectedImage == null ||
                             _selectedGrades.isEmpty ||
                             aiProvider.isLoading
                         ? null
@@ -1386,17 +1426,16 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 const SizedBox(width: 8),
                 Text(
                   'Generated Materials',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            ...response.materials
-                .map((material) => _buildGradeMaterial(material))
-                ,
+            ...response.materials.map(
+              (material) => _buildGradeMaterial(material),
+            ),
           ],
         );
       },
@@ -1499,9 +1538,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           Text(
             'Create drawing instructions and images for blackboard diagrams',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                ),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
           ),
           const SizedBox(height: 24),
           _buildVisualAidForm(),
@@ -1528,17 +1566,13 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           children: [
             Row(
               children: [
-                Icon(
-                  Icons.draw,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                Icon(Icons.draw, color: Theme.of(context).colorScheme.primary),
                 const SizedBox(width: 8),
                 Text(
                   'Visual Aid Request',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -1563,19 +1597,22 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.category),
                     ),
-                    items: [
-                      'diagram',
-                      'chart',
-                      'illustration',
-                      'flowchart',
-                      'map',
-                      'timeline'
-                    ]
-                        .map((type) => DropdownMenuItem(
-                              value: type,
-                              child: Text(type.toUpperCase()),
-                            ))
-                        .toList(),
+                    items:
+                        [
+                              'diagram',
+                              'chart',
+                              'illustration',
+                              'flowchart',
+                              'map',
+                              'timeline',
+                            ]
+                            .map(
+                              (type) => DropdownMenuItem(
+                                value: type,
+                                child: Text(type.toUpperCase()),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (value) =>
                         setState(() => _selectedVisualType = value!),
                   ),
@@ -1589,19 +1626,22 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.subject),
                     ),
-                    items: [
-                      'General',
-                      'Science',
-                      'Mathematics',
-                      'History',
-                      'Geography',
-                      'Arts',
-                    ]
-                        .map((subject) => DropdownMenuItem(
-                              value: subject,
-                              child: Text(subject),
-                            ))
-                        .toList(),
+                    items:
+                        [
+                              'General',
+                              'Science',
+                              'Mathematics',
+                              'History',
+                              'Geography',
+                              'Arts',
+                            ]
+                            .map(
+                              (subject) => DropdownMenuItem(
+                                value: subject,
+                                child: Text(subject),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (value) =>
                         setState(() => _selectedSubject = value!),
                   ),
@@ -1617,10 +1657,10 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 prefixIcon: Icon(Icons.school),
               ),
               items: ['Elementary', 'Middle', 'High School']
-                  .map((grade) => DropdownMenuItem(
-                        value: grade,
-                        child: Text(grade),
-                      ))
+                  .map(
+                    (grade) =>
+                        DropdownMenuItem(value: grade, child: Text(grade)),
+                  )
                   .toList(),
               onChanged: (value) => setState(() => _selectedGrade = value!),
             ),
@@ -1632,13 +1672,13 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   child: ElevatedButton.icon(
                     onPressed:
                         _conceptController.text.isEmpty || aiProvider.isLoading
-                            ? null
-                            : () => aiProvider.generateVisualAid(
-                                  concept: _conceptController.text,
-                                  type: _selectedVisualType,
-                                  subject: _selectedSubject,
-                                  gradeLevel: _selectedGrade,
-                                ),
+                        ? null
+                        : () => aiProvider.generateVisualAid(
+                            concept: _conceptController.text,
+                            type: _selectedVisualType,
+                            subject: _selectedSubject,
+                            gradeLevel: _selectedGrade,
+                          ),
                     icon: aiProvider.isLoading
                         ? const SizedBox(
                             width: 16,
@@ -1673,18 +1713,14 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           children: [
             Row(
               children: [
-                Icon(
-                  Icons.draw,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                Icon(Icons.draw, color: Theme.of(context).colorScheme.primary),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     '${response.type.toUpperCase()}: ${response.concept}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontWeight: FontWeight.w600),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 _buildContentActionButtons(response),
@@ -1700,8 +1736,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color:
-                        Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.outline.withOpacity(0.3),
                   ),
                 ),
                 child: ClipRRect(
@@ -1711,20 +1748,24 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                           response.svgContent!,
                           fit: BoxFit.contain,
                           placeholderBuilder: (context) => Container(
-                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerHighest,
                             child: Center(
                               child: Icon(
                                 Icons.draw,
                                 size: 48,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                               ),
                             ),
                           ),
                         )
                       : Container(
-                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.surfaceContainerHighest,
                           child: Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -1732,9 +1773,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                                 Icon(
                                   Icons.image_not_supported,
                                   size: 48,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSurfaceVariant,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
@@ -1755,10 +1796,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme
-                    .surfaceContainerHighest
-                    .withOpacity(0.5),
+                color: Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerHighest.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
@@ -1785,7 +1825,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                         icon: const Icon(Icons.volume_up, size: 18),
                         onPressed: () {
                           _showSnackBar(
-                              'Text-to-speech would be implemented here');
+                            'Text-to-speech would be implemented here',
+                          );
                         },
                       ),
                     ],
@@ -1804,10 +1845,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
               const SizedBox(height: 16),
               Text(
                 'Labels to Include',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w600),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 8),
               Wrap(
@@ -1817,13 +1857,13 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                     .map(
                       (label) => Chip(
                         label: Text(label),
-                        backgroundColor: Theme.of(context)
-                            .colorScheme
-                            .primaryContainer
-                            .withOpacity(0.5),
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.primaryContainer.withOpacity(0.5),
                         avatar: CircleAvatar(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
                           child: const Icon(
                             Icons.label,
                             size: 16,
@@ -1844,10 +1884,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primaryContainer
-                          .withOpacity(0.3),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primaryContainer.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
@@ -1863,12 +1902,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                             const SizedBox(width: 4),
                             Text(
                               'Materials',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                              style: Theme.of(context).textTheme.titleSmall
+                                  ?.copyWith(fontWeight: FontWeight.w600),
                             ),
                           ],
                         ),
@@ -1885,10 +1920,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .secondaryContainer
-                        .withOpacity(0.3),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.secondaryContainer.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
@@ -1902,8 +1936,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       Text(
                         '${response.estimatedTime} min',
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ],
                   ),
@@ -1936,9 +1970,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           Text(
             'Generate interactive games for classroom learning',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                ),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
           ),
           const SizedBox(height: 24),
           _buildGameForm(),
@@ -1965,17 +1998,13 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           children: [
             Row(
               children: [
-                Icon(
-                  Icons.games,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                Icon(Icons.games, color: Theme.of(context).colorScheme.primary),
                 const SizedBox(width: 8),
                 Text(
                   'Game Request',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -2000,21 +2029,24 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.sports_esports),
                     ),
-                    items: [
-                      'quiz',
-                      'memory',
-                      'puzzle',
-                      'word-game',
-                      'activity',
-                      'role-play',
-                      'competition',
-                      'card-game',
-                    ]
-                        .map((type) => DropdownMenuItem(
-                              value: type,
-                              child: Text(type.toUpperCase()),
-                            ))
-                        .toList(),
+                    items:
+                        [
+                              'quiz',
+                              'memory',
+                              'puzzle',
+                              'word-game',
+                              'activity',
+                              'role-play',
+                              'competition',
+                              'card-game',
+                            ]
+                            .map(
+                              (type) => DropdownMenuItem(
+                                value: type,
+                                child: Text(type.toUpperCase()),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (value) =>
                         setState(() => _selectedGameType = value!),
                   ),
@@ -2028,20 +2060,23 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.subject),
                     ),
-                    items: [
-                      'General',
-                      'Mathematics',
-                      'Science',
-                      'English',
-                      'Social Studies',
-                      'Arts',
-                      'Physical Education',
-                    ]
-                        .map((subject) => DropdownMenuItem(
-                              value: subject,
-                              child: Text(subject),
-                            ))
-                        .toList(),
+                    items:
+                        [
+                              'General',
+                              'Mathematics',
+                              'Science',
+                              'English',
+                              'Social Studies',
+                              'Arts',
+                              'Physical Education',
+                            ]
+                            .map(
+                              (subject) => DropdownMenuItem(
+                                value: subject,
+                                child: Text(subject),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (value) =>
                         setState(() => _selectedSubject = value!),
                   ),
@@ -2060,10 +2095,12 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       prefixIcon: Icon(Icons.school),
                     ),
                     items: ['Elementary', 'Middle', 'High School']
-                        .map((grade) => DropdownMenuItem(
-                              value: grade,
-                              child: Text(grade),
-                            ))
+                        .map(
+                          (grade) => DropdownMenuItem(
+                            value: grade,
+                            child: Text(grade),
+                          ),
+                        )
                         .toList(),
                     onChanged: (value) =>
                         setState(() => _selectedGrade = value!),
@@ -2079,10 +2116,12 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       prefixIcon: Icon(Icons.timer),
                     ),
                     items: [10, 15, 20, 30, 45, 60]
-                        .map((mins) => DropdownMenuItem(
-                              value: mins,
-                              child: Text('$mins min'),
-                            ))
+                        .map(
+                          (mins) => DropdownMenuItem(
+                            value: mins,
+                            child: Text('$mins min'),
+                          ),
+                        )
                         .toList(),
                     onChanged: (value) =>
                         setState(() => _selectedDuration = value!),
@@ -2098,14 +2137,14 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   child: ElevatedButton.icon(
                     onPressed:
                         _topicController.text.isEmpty || aiProvider.isLoading
-                            ? null
-                            : () => aiProvider.generateGame(
-                                  topic: _topicController.text,
-                                  gameType: _selectedGameType,
-                                  subject: _selectedSubject,
-                                  gradeLevel: _selectedGrade,
-                                  duration: _selectedDuration,
-                                ),
+                        ? null
+                        : () => aiProvider.generateGame(
+                            topic: _topicController.text,
+                            gameType: _selectedGameType,
+                            subject: _selectedSubject,
+                            gradeLevel: _selectedGrade,
+                            duration: _selectedDuration,
+                          ),
                     icon: aiProvider.isLoading
                         ? const SizedBox(
                             width: 16,
@@ -2143,10 +2182,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 Expanded(
                   child: Text(
                     response.title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontWeight: FontWeight.w600),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 _buildContentActionButtons(response),
@@ -2161,10 +2199,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primaryContainer
-                          .withOpacity(0.3),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primaryContainer.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
@@ -2177,10 +2214,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                         const SizedBox(height: 4),
                         Text(
                           response.gameType.toUpperCase(),
-                          style:
-                              Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -2191,10 +2226,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .secondaryContainer
-                          .withOpacity(0.3),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.secondaryContainer.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
@@ -2207,10 +2241,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                         const SizedBox(height: 4),
                         Text(
                           '${response.duration} min',
-                          style:
-                              Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -2221,10 +2253,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .tertiaryContainer
-                          .withOpacity(0.3),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.tertiaryContainer.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
@@ -2237,10 +2268,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                         const SizedBox(height: 4),
                         Text(
                           response.gradeLevel,
-                          style:
-                              Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -2302,10 +2331,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   padding: const EdgeInsets.all(16),
                   margin: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .surfaceContainerHighest
-                        .withOpacity(0.5),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(response.instructions),
@@ -2334,13 +2362,13 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                           .map(
                             (material) => Chip(
                               label: Text(material),
-                              backgroundColor: Theme.of(context)
-                                  .colorScheme
-                                  .secondaryContainer
-                                  .withOpacity(0.5),
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.secondaryContainer.withOpacity(0.5),
                               avatar: CircleAvatar(
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.secondary,
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.secondary,
                                 child: const Icon(
                                   Icons.inventory,
                                   size: 16,
@@ -2368,15 +2396,18 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 children: response.learningObjectives
                     .map(
                       (objective) => ListTile(
-                        leading:
-                            const Icon(Icons.check_circle_outline, size: 16),
+                        leading: const Icon(
+                          Icons.check_circle_outline,
+                          size: 16,
+                        ),
                         title: Text(objective),
                         dense: true,
                         trailing: IconButton(
                           icon: const Icon(Icons.volume_up, size: 16),
                           onPressed: () {
                             _showSnackBar(
-                                'Text-to-speech would be implemented here');
+                              'Text-to-speech would be implemented here',
+                            );
                           },
                         ),
                       ),
@@ -2404,7 +2435,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                           icon: const Icon(Icons.volume_up, size: 16),
                           onPressed: () {
                             _showSnackBar(
-                                'Text-to-speech would be implemented here');
+                              'Text-to-speech would be implemented here',
+                            );
                           },
                         ),
                       ),
@@ -2438,9 +2470,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           Text(
             'Assess student reading with voice recording and AI analysis',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                ),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
           ),
           const SizedBox(height: 24),
           _buildReadingTextInput(),
@@ -2453,7 +2484,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 return const SizedBox();
               }
               return _buildReadingAssessmentResults(
-                  aiProvider.lastReadingAssessment!);
+                aiProvider.lastReadingAssessment!,
+              );
             },
           ),
         ],
@@ -2477,10 +2509,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                 const SizedBox(width: 8),
                 Text(
                   'Reading Text',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -2539,10 +2570,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                     const SizedBox(width: 8),
                     Text(
                       'Voice Recording',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(fontWeight: FontWeight.w600),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
@@ -2554,10 +2584,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                     shape: BoxShape.circle,
                     color: aiProvider.isRecording
                         ? Colors.red.withOpacity(0.1)
-                        : Theme.of(context)
-                            .colorScheme
-                            .primaryContainer
-                            .withOpacity(0.3),
+                        : Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer.withOpacity(0.3),
                     border: Border.all(
                       color: aiProvider.isRecording
                           ? Colors.red
@@ -2583,11 +2612,11 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                       ? 'Recording... Tap to stop'
                       : 'Tap to start recording',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: aiProvider.isRecording
-                            ? Colors.red
-                            : Theme.of(context).colorScheme.primary,
-                      ),
+                    fontWeight: FontWeight.w500,
+                    color: aiProvider.isRecording
+                        ? Colors.red
+                        : Theme.of(context).colorScheme.primary,
+                  ),
                 ),
                 if (aiProvider.isRecording) ...[
                   const SizedBox(height: 16),
@@ -2641,15 +2670,16 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
           children: [
             Row(
               children: [
-                Icon(Icons.assessment,
-                    color: Theme.of(context).colorScheme.primary),
+                Icon(
+                  Icons.assessment,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   'Reading Assessment Results',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
                 ),
                 const Spacer(),
                 _buildContentActionButtons(assessment),
@@ -2664,8 +2694,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: getScoreColor(assessment.accuracyPercentage)
-                          .withOpacity(0.1),
+                      color: getScoreColor(
+                        assessment.accuracyPercentage,
+                      ).withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: getScoreColor(assessment.accuracyPercentage),
@@ -2682,12 +2713,11 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                         const SizedBox(height: 8),
                         Text(
                           '${assessment.accuracyPercentage.toStringAsFixed(1)}%',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
+                          style: Theme.of(context).textTheme.headlineSmall
                               ?.copyWith(
                                 color: getScoreColor(
-                                    assessment.accuracyPercentage),
+                                  assessment.accuracyPercentage,
+                                ),
                                 fontWeight: FontWeight.bold,
                               ),
                         ),
@@ -2704,10 +2734,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primaryContainer
-                          .withOpacity(0.3),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primaryContainer.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: Theme.of(context).colorScheme.primary,
@@ -2724,9 +2753,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                         const SizedBox(height: 8),
                         Text(
                           '${assessment.fluencyRating}/5',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
+                          style: Theme.of(context).textTheme.headlineSmall
                               ?.copyWith(
                                 color: Theme.of(context).colorScheme.primary,
                                 fontWeight: FontWeight.bold,
@@ -2764,17 +2791,16 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                         decoration: BoxDecoration(
                           color: Colors.green.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
-                          border:
-                              Border.all(color: Colors.green.withOpacity(0.3)),
+                          border: Border.all(
+                            color: Colors.green.withOpacity(0.3),
+                          ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               'Expected Text:',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
+                              style: Theme.of(context).textTheme.titleSmall
                                   ?.copyWith(
                                     color: Colors.green,
                                     fontWeight: FontWeight.w600,
@@ -2792,8 +2818,9 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                         decoration: BoxDecoration(
                           color: Colors.blue.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
-                          border:
-                              Border.all(color: Colors.blue.withOpacity(0.3)),
+                          border: Border.all(
+                            color: Colors.blue.withOpacity(0.3),
+                          ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -2802,9 +2829,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                               children: [
                                 Text(
                                   'Actual Reading:',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall
+                                  style: Theme.of(context).textTheme.titleSmall
                                       ?.copyWith(
                                         color: Colors.blue,
                                         fontWeight: FontWeight.w600,
@@ -2812,11 +2837,15 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                                 ),
                                 const Spacer(),
                                 IconButton(
-                                  icon: const Icon(Icons.volume_up,
-                                      size: 18, color: Colors.blue),
+                                  icon: const Icon(
+                                    Icons.volume_up,
+                                    size: 18,
+                                    color: Colors.blue,
+                                  ),
                                   onPressed: () {
                                     _showSnackBar(
-                                        'Text-to-speech would be implemented here');
+                                      'Text-to-speech would be implemented here',
+                                    );
                                   },
                                 ),
                               ],
@@ -2836,22 +2865,23 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
               const SizedBox(height: 16),
               ExpansionTile(
                 title: const Text('Pronunciation Issues'),
-                leading: const Icon(
-                  Icons.warning_amber,
-                  color: Colors.orange,
-                ),
+                leading: const Icon(Icons.warning_amber, color: Colors.orange),
                 children: assessment.pronunciationErrors
                     .map(
                       (error) => ListTile(
-                        leading: const Icon(Icons.error_outline,
-                            size: 16, color: Colors.orange),
+                        leading: const Icon(
+                          Icons.error_outline,
+                          size: 16,
+                          color: Colors.orange,
+                        ),
                         title: Text(error),
                         dense: true,
                         trailing: IconButton(
                           icon: const Icon(Icons.volume_up, size: 16),
                           onPressed: () {
                             _showSnackBar(
-                                'Text-to-speech would be implemented here');
+                              'Text-to-speech would be implemented here',
+                            );
                           },
                         ),
                       ),
@@ -2910,7 +2940,8 @@ class _AIAssistantScreenState extends State<AIAssistantScreen>
                           icon: const Icon(Icons.volume_up, size: 16),
                           onPressed: () {
                             _showSnackBar(
-                                'Text-to-speech would be implemented here');
+                              'Text-to-speech would be implemented here',
+                            );
                           },
                         ),
                       ),

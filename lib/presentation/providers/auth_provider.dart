@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myapp/data/models/teacher/teacher_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -60,12 +59,12 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> _loadTeacherProfile() async {
     if (_user == null) return;
-
+    print("");
     try {
       final doc = await _firestore.collection('teachers').doc(_user!.uid).get();
       if (doc.exists) {
         _teacher = Teacher.fromMap(doc.data()!);
-
+        // notifyListeners();
         // Update last active timestamp
         await _firestore.collection('teachers').doc(_user!.uid).update({
           'lastActiveAt': FieldValue.serverTimestamp(),
@@ -134,13 +133,20 @@ class AuthProvider extends ChangeNotifier {
       stressProfile: {},
       createdAt: DateTime.now(),
       lastActiveAt: DateTime.now(),
-      isOnboarded: true
     );
 
-    await _firestore.collection('teachers').doc(user.uid).set(teacher.toMap());
-    _prefs = await SharedPreferences.getInstance();
-      _prefs.setBool('isOnboarded', true);
-    _teacher = teacher;
+    try {
+      await _firestore
+          .collection('teachers')
+          .doc(user.uid)
+          .set(teacher.toMap());
+      _prefs = await SharedPreferences.getInstance();
+      _teacher = teacher;
+      print('');
+    } catch (e) {
+      print('Error creating teacher profile: $e');
+      return;
+    }
   }
 
   Future<void> updateTeacherProfile(Map<String, dynamic> updates) async {

@@ -9,7 +9,6 @@ import 'package:record/record.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 // import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-
 // Import model classes
 
 class AITeachingAssistantService {
@@ -51,7 +50,8 @@ class AITeachingAssistantService {
     String? subject,
     String? gradeLevel,
   }) async {
-    final enhancedPrompt = '''
+    final enhancedPrompt =
+        '''
 Create educational content in $language for ${gradeLevel ?? 'mixed grade'} students.
 Cultural Context: $culturalContext
 Subject: ${subject ?? 'general'}
@@ -86,7 +86,8 @@ Format the response as structured content that a teacher can easily use.
     String? language,
   }) async {
     final base64Image = base64Encode(imageBytes);
-    final prompt = '''
+    final prompt =
+        '''
 Analyze this textbook page and create differentiated worksheets for grades: ${targetGrades.join(', ')}.
 Subject: ${subject ?? 'general'}
 Language: ${language ?? 'English'}
@@ -105,13 +106,15 @@ Make sure content is progressively complex from lower to higher grades.
     List<GradeLevelMaterial> materials = [];
 
     for (String grade in targetGrades) {
-      materials.add(GradeLevelMaterial(
-        gradeLevel: grade,
-        content: response['content_$grade'] ?? response['content'] ?? '',
-        activities: _extractActivities(response, grade),
-        assessments: _extractAssessments(response, grade),
-        visualAids: _extractVisualAids(response, grade),
-      ));
+      materials.add(
+        GradeLevelMaterial(
+          gradeLevel: grade,
+          content: response['content_$grade'] ?? response['content'] ?? '',
+          activities: _extractActivities(response, grade),
+          assessments: _extractAssessments(response, grade),
+          visualAids: _extractVisualAids(response, grade),
+        ),
+      );
     }
 
     return DifferentiatedMaterialsResponse(
@@ -131,7 +134,8 @@ Make sure content is progressively complex from lower to higher grades.
     String? gradeLevel,
     bool generateImage = true,
   }) async {
-    final instructionsPrompt = '''
+    final instructionsPrompt =
+        '''
 Create detailed instructions for a $type to explain "$concept" for ${gradeLevel ?? 'elementary'} students.
 Subject: ${subject ?? 'general'}
 
@@ -153,7 +157,11 @@ Make it simple enough to draw with chalk on a blackboard.
     if (generateImage) {
       try {
         imageUrl = await _generateImageWithVertexAI(
-            concept, type, subject, gradeLevel);
+          concept,
+          type,
+          subject,
+          gradeLevel,
+        );
         if (imageUrl == null) {
           svgContent = _generateEnhancedSVGContent(concept, type);
         }
@@ -166,7 +174,8 @@ Make it simple enough to draw with chalk on a blackboard.
     return VisualAidResponse(
       concept: concept,
       type: type,
-      drawingInstructions: instructionsResponse['instructions'] ??
+      drawingInstructions:
+          instructionsResponse['instructions'] ??
           instructionsResponse['content'] ??
           '',
       labels: _extractLabels(instructionsResponse),
@@ -174,7 +183,7 @@ Make it simple enough to draw with chalk on a blackboard.
         'Chalk',
         'Blackboard',
         'Ruler/Scale',
-        'Colored chalk (optional)'
+        'Colored chalk (optional)',
       ],
       estimatedTime: _estimateDrawingTime(type),
       subject: subject ?? 'general',
@@ -193,7 +202,8 @@ Make it simple enough to draw with chalk on a blackboard.
     String? gradeLevel,
     int duration = 15,
   }) async {
-    final prompt = '''
+    final prompt =
+        '''
 Create an educational $gameType game about "$topic" for ${gradeLevel ?? 'elementary'} students.
 Subject: ${subject ?? 'general'}
 Duration: $duration minutes
@@ -234,7 +244,8 @@ Make it suitable for a classroom with limited resources.
     String? gradeLevel,
     bool includeAnalogy = true,
   }) async {
-    final prompt = '''
+    final prompt =
+        '''
 Explain this concept in $language for ${gradeLevel ?? 'elementary'} level students: "$question"
 
 Provide:
@@ -262,53 +273,53 @@ Keep the language simple and engaging for young learners.
   }
 
   // Reading assessment
-//   Future<ReadingAssessmentResponse> assessReading({
-//     required Uint8List audioBytes,
-//     required String expectedText,
-//     String? language,
-//     String? gradeLevel,
-//   }) async {
-//     try {
-//       final transcription =
-//           await _speechToTextFromBytes(audioBytes, language ?? 'en-US');
+  //   Future<ReadingAssessmentResponse> assessReading({
+  //     required Uint8List audioBytes,
+  //     required String expectedText,
+  //     String? language,
+  //     String? gradeLevel,
+  //   }) async {
+  //     try {
+  //       final transcription =
+  //           await _speechToTextFromBytes(audioBytes, language ?? 'en-US');
 
-//       final analysisPrompt = '''
-// Compare the expected text with the actual reading transcription for ${gradeLevel ?? 'elementary'} level assessment.
+  //       final analysisPrompt = '''
+  // Compare the expected text with the actual reading transcription for ${gradeLevel ?? 'elementary'} level assessment.
 
-// Expected: "$expectedText"
-// Actual: "$transcription"
+  // Expected: "$expectedText"
+  // Actual: "$transcription"
 
-// Provide detailed reading assessment with:
-// 1. Accuracy percentage (0-100)
-// 2. Specific pronunciation errors with corrections
-// 3. Fluency rating (1-5 scale: 1=very slow/choppy, 5=smooth/natural)
-// 4. Areas for improvement with specific suggestions
-// 5. Positive feedback and encouragement
-// 6. Suggested practice activities for improvement
-// 7. Words or sounds that need special attention
+  // Provide detailed reading assessment with:
+  // 1. Accuracy percentage (0-100)
+  // 2. Specific pronunciation errors with corrections
+  // 3. Fluency rating (1-5 scale: 1=very slow/choppy, 5=smooth/natural)
+  // 4. Areas for improvement with specific suggestions
+  // 5. Positive feedback and encouragement
+  // 6. Suggested practice activities for improvement
+  // 7. Words or sounds that need special attention
 
-// Format the response as structured data that can be easily parsed.
-// ''';
+  // Format the response as structured data that can be easily parsed.
+  // ''';
 
-//       final analysis = await _callGeminiAPI(analysisPrompt);
+  //       final analysis = await _callGeminiAPI(analysisPrompt);
 
-//       return ReadingAssessmentResponse(
-//         expectedText: expectedText,
-//         actualTranscription: transcription,
-//         accuracyPercentage: _calculateAccuracy(expectedText, transcription),
-//         fluencyRating: _extractFluencyRating(analysis),
-//         pronunciationErrors: _extractErrors(analysis),
-//         feedback: analysis['feedback'] ??
-//             analysis['content'] ??
-//             'Assessment completed.',
-//         suggestions: _extractSuggestions(analysis),
-//         language: language ?? 'English',
-//         assessedAt: DateTime.now(),
-//       );
-//     } catch (e) {
-//       throw AIServiceException('Failed to assess reading: $e');
-//     }
-//   }
+  //       return ReadingAssessmentResponse(
+  //         expectedText: expectedText,
+  //         actualTranscription: transcription,
+  //         accuracyPercentage: _calculateAccuracy(expectedText, transcription),
+  //         fluencyRating: _extractFluencyRating(analysis),
+  //         pronunciationErrors: _extractErrors(analysis),
+  //         feedback: analysis['feedback'] ??
+  //             analysis['content'] ??
+  //             'Assessment completed.',
+  //         suggestions: _extractSuggestions(analysis),
+  //         language: language ?? 'English',
+  //         assessedAt: DateTime.now(),
+  //       );
+  //     } catch (e) {
+  //       throw AIServiceException('Failed to assess reading: $e');
+  //     }
+  //   }
 
   // Audio recording methods
   Future<void> startRecording() async {
@@ -367,7 +378,6 @@ Keep the language simple and engaging for young learners.
   Future<Map<String, dynamic>> _callGeminiAPI(String prompt) async {
     final url =
         '$_baseUrl/models/gemini-1.5-flash:generateContent?key=$_apiKey';
-
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -376,9 +386,9 @@ Keep the language simple and engaging for young learners.
           'contents': [
             {
               'parts': [
-                {'text': prompt}
-              ]
-            }
+                {'text': prompt},
+              ],
+            },
           ],
           'generationConfig': {
             'temperature': 0.7,
@@ -389,24 +399,23 @@ Keep the language simple and engaging for young learners.
           'safetySettings': [
             {
               'category': 'HARM_CATEGORY_HARASSMENT',
-              'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+              'threshold': 'BLOCK_MEDIUM_AND_ABOVE',
             },
             {
               'category': 'HARM_CATEGORY_HATE_SPEECH',
-              'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+              'threshold': 'BLOCK_MEDIUM_AND_ABOVE',
             },
             {
               'category': 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-              'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+              'threshold': 'BLOCK_MEDIUM_AND_ABOVE',
             },
             {
               'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
-              'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+              'threshold': 'BLOCK_MEDIUM_AND_ABOVE',
             },
-          ]
+          ],
         }),
       );
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['candidates'] != null && data['candidates'].isNotEmpty) {
@@ -418,7 +427,8 @@ Keep the language simple and engaging for young learners.
       } else {
         final errorData = jsonDecode(response.body);
         throw Exception(
-            'API call failed: ${response.statusCode} - ${errorData['error']['message']}');
+          'API call failed: ${response.statusCode} - ${errorData['error']['message']}',
+        );
       }
     } catch (e) {
       print('Error in _callGeminiAPI: $e');
@@ -427,7 +437,9 @@ Keep the language simple and engaging for young learners.
   }
 
   Future<Map<String, dynamic>> _callGeminiVisionAPI(
-      String prompt, String base64Image) async {
+    String prompt,
+    String base64Image,
+  ) async {
     final url =
         '$_baseUrl/models/gemini-1.5-flash:generateContent?key=$_apiKey';
 
@@ -443,18 +455,18 @@ Keep the language simple and engaging for young learners.
                 {
                   'inline_data': {
                     'mime_type': 'image/jpeg',
-                    'data': base64Image
-                  }
-                }
-              ]
-            }
+                    'data': base64Image,
+                  },
+                },
+              ],
+            },
           ],
           'generationConfig': {
             'temperature': 0.7,
             'maxOutputTokens': 2048,
             'topP': 0.8,
             'topK': 40,
-          }
+          },
         }),
       );
 
@@ -469,7 +481,8 @@ Keep the language simple and engaging for young learners.
       } else {
         final errorData = jsonDecode(response.body);
         throw Exception(
-            'Vision API call failed: ${response.statusCode} - ${errorData['error']['message']}');
+          'Vision API call failed: ${response.statusCode} - ${errorData['error']['message']}',
+        );
       }
     } catch (e) {
       print('Error in _callGeminiVisionAPI: $e');
@@ -478,7 +491,11 @@ Keep the language simple and engaging for young learners.
   }
 
   Future<String?> _generateImageWithVertexAI(
-      String concept, String type, String? subject, String? gradeLevel) async {
+    String concept,
+    String type,
+    String? subject,
+    String? gradeLevel,
+  ) async {
     // Placeholder for actual Vertex AI implementation
     return null;
   }
@@ -616,7 +633,9 @@ Keep the language simple and engaging for young learners.
   }
 
   List<String> _extractAssessments(
-      Map<String, dynamic> response, String grade) {
+    Map<String, dynamic> response,
+    String grade,
+  ) {
     return ['Oral questioning', 'Quick quiz', 'Practical demonstration'];
   }
 
@@ -671,9 +690,11 @@ Keep the language simple and engaging for young learners.
         ? expectedWords.length
         : actualWords.length;
 
-    for (int i = 0;
-        i < maxLength && i < expectedWords.length && i < actualWords.length;
-        i++) {
+    for (
+      int i = 0;
+      i < maxLength && i < expectedWords.length && i < actualWords.length;
+      i++
+    ) {
       if (expectedWords[i] == actualWords[i]) matches++;
     }
 

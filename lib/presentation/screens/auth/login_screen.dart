@@ -212,7 +212,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextButton(
                       onPressed: authProvider.isLoading
                           ? null
-                          : () => setState(() => _isSignUp = !_isSignUp),
+                          : () => setState(() {
+                              _emailController.clear();
+                              _passwordController.clear();
+                              _isSignUp = !_isSignUp;
+                            }),
                       child: Text(
                         _isSignUp
                             ? 'Already have an account? Sign In'

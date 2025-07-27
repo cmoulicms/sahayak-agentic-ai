@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Teacher {
   final String id;
   final String name;
@@ -10,7 +12,6 @@ class Teacher {
   final Map<String, dynamic> stressProfile;
   final DateTime createdAt;
   final DateTime lastActiveAt;
-  final isOnboarded;
 
   Teacher({
     required this.id,
@@ -24,7 +25,6 @@ class Teacher {
     required this.stressProfile,
     required this.createdAt,
     required this.lastActiveAt,
-    required this.isOnboarded,
   });
 
   factory Teacher.fromMap(Map<String, dynamic> map) {
@@ -39,8 +39,7 @@ class Teacher {
       schoolContext: map['schoolContext'],
       stressProfile: Map<String, dynamic>.from(map['stressProfile']),
       createdAt: DateTime.parse(map['createdAt']),
-      lastActiveAt: DateTime.parse(map['lastActiveAt']),
-      isOnboarded: map['isOnboarded'] ?? false,
+      lastActiveAt: (map['lastActiveAt'] as Timestamp).toDate(),
     );
   }
 
@@ -57,7 +56,6 @@ class Teacher {
       'stressProfile': stressProfile,
       'createdAt': createdAt.toIso8601String(),
       'lastActiveAt': lastActiveAt.toIso8601String(),
-      'isOnboarded': isOnboarded,
     };
   }
 }
